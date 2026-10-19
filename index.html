@@ -12,32 +12,47 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;back
 header{padding:20px;background:#15191e;border-bottom:1px solid #2c3239;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .logo{font-size:25px;font-weight:900}
 .logo span{color:#f2b632}
-.sub,.small{color:#aeb6c0}
+.sub,.small,.muted{color:#aeb6c0}
 .sub{margin-top:5px;font-size:13px}
+.muted{font-size:13px}
 main{padding:16px;max-width:760px;margin:auto}
 .card{background:#171b20;border:1px solid #2b323a;border-radius:18px;padding:18px;margin-bottom:14px}
 h2{margin:0 0 12px;font-size:20px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .box{background:#222830;border-radius:14px;padding:14px;text-align:center}
 .num{font-size:27px;font-weight:900}
-input,select,textarea{box-sizing:border-box;width:100%;padding:13px;margin:6px 0;border:1px solid #3a424c;border-radius:11px;background:#0c0e11;color:white;font-size:16px}
+
+input,select,textarea{
+width:100%;padding:13px;margin:6px 0;border:1px solid #3a424c;
+border-radius:11px;background:#0c0e11;color:white;font-size:16px
+}
 textarea{min-height:72px}
-button{border:0;border-radius:12px;padding:13px;background:#f2b632;color:#111;font-size:15px;font-weight:800;cursor:pointer}
+
+button{
+border:0;border-radius:12px;padding:13px;background:#f2b632;
+color:#111;font-size:15px;font-weight:800;cursor:pointer
+}
 .primary{width:100%;margin-top:8px}
 .secondary{background:#29313a;color:#fff}
+.linkbtn{background:transparent;color:#f2b632;width:100%;margin-top:9px}
 .hidden{display:none!important}
+
 .tabs{display:flex;gap:8px;overflow:auto;margin-bottom:14px}
 .tabs button{white-space:nowrap;flex:1}
 .tabs button.active{background:#f2b632;color:#111}
+
 .record{background:#222830;border-radius:13px;padding:13px;margin-top:9px;overflow-wrap:anywhere}
 .record strong{font-size:16px}
 .row{display:flex;gap:8px;align-items:center;justify-content:space-between}
 .notice{padding:12px;border-radius:12px;background:#242b32;color:#dce2e8;margin:10px 0;font-size:14px}
-.muted{font-size:13px;color:#aeb6c0}
 .auth{max-width:430px;margin:35px auto}
 .auth h2{font-size:24px}
 .pill{font-size:12px;color:#111;background:#f2b632;border-radius:20px;padding:5px 8px}
-@media(min-width:650px){main{padding:22px}.grid.stats{grid-template-columns:repeat(4,1fr)}}
+
+@media(min-width:650px){
+main{padding:22px}
+.grid.stats{grid-template-columns:repeat(4,1fr)}
+}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -57,28 +72,40 @@ button{border:0;border-radius:12px;padding:13px;background:#f2b632;color:#111;fo
 
 <section id="authView" class="card auth">
 <h2>Marhan Filo Giriş</h2>
-
-<div class="muted">
-Kayıtlar merkezi sistemde tutulur ve yetkili telefonlardan görüntülenebilir.
-</div>
+<div class="muted">Yetkili kullanıcı hesabınızla giriş yapın.</div>
 
 <form id="authForm">
 <input id="email" type="email" autocomplete="email" required placeholder="E-posta adresi">
-
 <input id="password" type="password" autocomplete="current-password" minlength="8" required placeholder="Şifre">
 
 <button class="primary" type="submit" id="loginBtn">Giriş Yap</button>
-
-<button class="primary secondary" type="button" id="signupBtn">
-İlk Hesabımı Oluştur
-</button>
+<button class="primary secondary" type="button" id="signupBtn">İlk Hesabımı Oluştur</button>
+<button class="linkbtn" type="button" id="forgotBtn">Şifremi Unuttum</button>
 </form>
 
 <div id="authMsg" class="notice hidden"></div>
 
 <p class="muted">
-Yalnızca Marhan Filo tarafından yetkilendirilen e-posta adresleri filo verilerine erişebilir.
+Yalnızca Marhan Filo tarafından yetkilendirilen kullanıcılar filo verilerine erişebilir.
 </p>
+</section>
+
+
+<section id="resetView" class="card auth hidden">
+
+<h2>Yeni Şifre Belirle</h2>
+
+<div class="muted">
+Yeni şifren en az 8 karakter olmalıdır.
+</div>
+
+<input id="newPassword" type="password" minlength="8" placeholder="Yeni şifre">
+<input id="newPassword2" type="password" minlength="8" placeholder="Yeni şifre tekrar">
+
+<button id="savePassword" class="primary">Yeni Şifreyi Kaydet</button>
+
+<div id="resetMsg" class="notice hidden"></div>
+
 </section>
 
 
@@ -96,28 +123,12 @@ Yalnızca Marhan Filo tarafından yetkilendirilen e-posta adresleri filo veriler
 </div>
 
 <div class="grid stats">
-
-<div class="box">
-<div class="num" id="truckCount">0</div>
-<div class="small">Kamyon</div>
+<div class="box"><div class="num" id="truckCount">0</div><div class="small">Kamyon</div></div>
+<div class="box"><div class="num" id="excavatorCount">0</div><div class="small">Ekskavatör</div></div>
+<div class="box"><div class="num" id="otherCount">0</div><div class="small">Diğer</div></div>
+<div class="box"><div class="num" id="maintenanceCount">0</div><div class="small">Bakım</div></div>
 </div>
 
-<div class="box">
-<div class="num" id="excavatorCount">0</div>
-<div class="small">Ekskavatör</div>
-</div>
-
-<div class="box">
-<div class="num" id="otherCount">0</div>
-<div class="small">Diğer</div>
-</div>
-
-<div class="box">
-<div class="num" id="maintenanceCount">0</div>
-<div class="small">Bakım</div>
-</div>
-
-</div>
 </div>
 
 
@@ -161,9 +172,9 @@ Yalnızca Marhan Filo tarafından yetkilendirilen e-posta adresleri filo veriler
 
 </div>
 
-<input name="guncel_deger" type="number" min="0" placeholder="Güncel KM / saat" value="0">
+<input name="guncel_deger" type="number" min="0" value="0" placeholder="Güncel KM / saat">
 
-<textarea name="notlar" placeholder="Notlar (isteğe bağlı)"></textarea>
+<textarea name="notlar" placeholder="Notlar"></textarea>
 
 <button class="primary" type="submit">Aracı Kaydet</button>
 
@@ -184,7 +195,7 @@ Yalnızca Marhan Filo tarafından yetkilendirilen e-posta adresleri filo veriler
 
 <input name="tarih" type="date" required>
 
-<input name="bakim_turu" required placeholder="Bakım türü (yağ, filtre vb.)">
+<input name="bakim_turu" required placeholder="Bakım türü">
 
 <input name="km_saat" type="number" min="0" placeholder="KM / çalışma saati">
 
@@ -268,11 +279,8 @@ Yalnızca Marhan Filo tarafından yetkilendirilen e-posta adresleri filo veriler
 <input name="parca_no" placeholder="Parça numarası">
 
 <div class="grid">
-
 <input name="adet" type="number" min="1" value="1" placeholder="Adet">
-
 <input name="km_saat" type="number" min="0" placeholder="KM / çalışma saati">
-
 </div>
 
 <input name="birim_fiyat" type="number" min="0" step="0.01" placeholder="Birim fiyat (₺)">
@@ -301,12 +309,14 @@ Yalnızca Marhan Filo tarafından yetkilendirilen e-posta adresleri filo veriler
 (function(){
 
 const SUPABASE_URL='https://qccpcepsgfepuyltamae.supabase.co';
-
 const SUPABASE_KEY='sb_publishable_mKOALiZdR_RpkMt028nbIA_vOv0epVz';
 
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-let vehicles=[],maintenance=[],tires=[],parts=[];
+let vehicles=[];
+let maintenance=[];
+let tires=[];
+let parts=[];
 
 const $=id=>document.getElementById(id);
 
@@ -336,17 +346,11 @@ $(id).classList.add('hidden');
 function safe(value){
 
 return String(value==null?'':value).replace(/[&<>"']/g,c=>({
-
 '&':'&amp;',
-
 '<':'&lt;',
-
 '>':'&gt;',
-
 '"':'&quot;',
-
 "'":'&#39;'
-
 }[c]));
 
 }
@@ -357,12 +361,18 @@ function formDataObj(form){
 const obj=Object.fromEntries(new FormData(form).entries());
 
 Object.keys(obj).forEach(k=>{
-
-if(obj[k]==='')obj[k]=null;
-
+if(obj[k]==='') obj[k]=null;
 });
 
 return obj;
+
+}
+
+
+function isRecovery(){
+
+return location.hash.includes('type=recovery') ||
+location.search.includes('type=recovery');
 
 }
 
@@ -371,9 +381,27 @@ async function authState(){
 
 const {data:{session}}=await db.auth.getSession();
 
+
+if(isRecovery()){
+
+$('authView').classList.add('hidden');
+
+$('appView').classList.add('hidden');
+
+$('resetView').classList.remove('hidden');
+
+$('logout').classList.add('hidden');
+
+return;
+
+}
+
+
 if(!session){
 
 $('authView').classList.remove('hidden');
+
+$('resetView').classList.add('hidden');
 
 $('appView').classList.add('hidden');
 
@@ -385,13 +413,9 @@ return;
 
 
 const {data:member,error}=await db
-
 .from('company_members')
-
 .select('role,email')
-
 .eq('user_id',session.user.id)
-
 .maybeSingle();
 
 
@@ -405,10 +429,7 @@ $('appView').classList.add('hidden');
 
 $('logout').classList.add('hidden');
 
-message(
-'authMsg',
-'Bu e-posta Marhan Filo için yetkilendirilmemiş.'
-);
+message('authMsg','Bu e-posta Marhan Filo için yetkilendirilmemiş.');
 
 return;
 
@@ -417,20 +438,21 @@ return;
 
 $('authView').classList.add('hidden');
 
+$('resetView').classList.add('hidden');
+
 $('appView').classList.remove('hidden');
 
 $('logout').classList.remove('hidden');
 
 $('welcome').textContent=
-session.user.email+
-' • '+
-(member.role==='admin'?'Yönetici':'Kullanıcı');
+session.user.email+' • '+(member.role==='admin'?'Yönetici':'Kullanıcı');
 
 clearMessage('authMsg');
 
 await loadAll();
 
 }
+
 
 
 $('authForm').addEventListener('submit',async e=>{
@@ -454,10 +476,7 @@ $('loginBtn').disabled=false;
 
 if(error){
 
-message(
-'authMsg',
-'Giriş yapılamadı: '+error.message
-);
+message('authMsg','Giriş yapılamadı: '+error.message);
 
 return;
 
@@ -466,6 +485,7 @@ return;
 await authState();
 
 });
+
 
 
 $('signupBtn').addEventListener('click',async()=>{
@@ -498,10 +518,7 @@ $('signupBtn').disabled=false;
 
 if(error){
 
-message(
-'authMsg',
-'Hesap oluşturulamadı: '+error.message
-);
+message('authMsg','Hesap oluşturulamadı: '+error.message);
 
 return;
 
@@ -523,6 +540,129 @@ message(
 });
 
 
+
+$('forgotBtn').addEventListener('click',async()=>{
+
+clearMessage('authMsg');
+
+const email=$('email').value.trim();
+
+if(!email){
+
+message(
+'authMsg',
+'Önce e-posta adresini yaz.'
+);
+
+return;
+
+}
+
+$('forgotBtn').disabled=true;
+
+const redirectTo=
+location.origin+
+location.pathname;
+
+const {error}=await db.auth.resetPasswordForEmail(
+email,
+{redirectTo}
+);
+
+$('forgotBtn').disabled=false;
+
+if(error){
+
+message(
+'authMsg',
+'Şifre yenileme bağlantısı gönderilemedi: '+error.message
+);
+
+return;
+
+}
+
+message(
+'authMsg',
+'Şifre yenileme bağlantısı e-posta adresine gönderildi. Gelen e-postadaki bağlantıya bas.'
+);
+
+});
+
+
+
+$('savePassword').addEventListener('click',async()=>{
+
+clearMessage('resetMsg');
+
+const p1=$('newPassword').value;
+
+const p2=$('newPassword2').value;
+
+if(p1.length<8){
+
+message(
+'resetMsg',
+'Şifre en az 8 karakter olmalı.'
+);
+
+return;
+
+}
+
+if(p1!==p2){
+
+message(
+'resetMsg',
+'İki şifre aynı değil.'
+);
+
+return;
+
+}
+
+$('savePassword').disabled=true;
+
+const {error}=await db.auth.updateUser({
+password:p1
+});
+
+$('savePassword').disabled=false;
+
+if(error){
+
+message(
+'resetMsg',
+'Şifre değiştirilemedi: '+error.message
+);
+
+return;
+
+}
+
+message(
+'resetMsg',
+'Şifren değiştirildi. Giriş ekranına yönlendiriliyorsun.'
+);
+
+setTimeout(async()=>{
+
+await db.auth.signOut();
+
+history.replaceState(
+null,
+'',
+location.pathname
+);
+
+location.reload();
+
+},1500);
+
+});
+
+
+
 $('logout').addEventListener('click',async()=>{
 
 await db.auth.signOut();
@@ -532,9 +672,25 @@ location.reload();
 });
 
 
-db.auth.onAuthStateChange(
-()=>setTimeout(authState,0)
-);
+
+db.auth.onAuthStateChange((event)=>{
+
+if(event==='PASSWORD_RECOVERY'){
+
+$('authView').classList.add('hidden');
+
+$('appView').classList.add('hidden');
+
+$('resetView').classList.remove('hidden');
+
+return;
+
+}
+
+setTimeout(authState,0);
+
+});
+
 
 
 document.querySelectorAll('#tabs button').forEach(btn=>{
@@ -556,27 +712,20 @@ $(btn.dataset.tab+'Panel').classList.remove('hidden');
 });
 
 
+
 async function loadAll(){
 
 clearMessage('appMsg');
 
 const results=await Promise.all([
 
-db.from('araclar')
-.select('*')
-.order('plaka'),
+db.from('araclar').select('*').order('plaka'),
 
-db.from('bakimlar')
-.select('*')
-.order('tarih',{ascending:false}),
+db.from('bakimlar').select('*').order('tarih',{ascending:false}),
 
-db.from('lastikler')
-.select('*')
-.order('tarih',{ascending:false}),
+db.from('lastikler').select('*').order('tarih',{ascending:false}),
 
-db.from('parcalar')
-.select('*')
-.order('tarih',{ascending:false})
+db.from('parcalar').select('*').order('tarih',{ascending:false})
 
 ]);
 
@@ -595,17 +744,18 @@ return;
 }
 
 
-vehicles=results[0].data||[];
+vehicles=results[0].data || [];
 
-maintenance=results[1].data||[];
+maintenance=results[1].data || [];
 
-tires=results[2].data||[];
+tires=results[2].data || [];
 
-parts=results[3].data||[];
+parts=results[3].data || [];
 
 render();
 
 }
+
 
 
 function vehicleName(id){
@@ -614,9 +764,10 @@ const v=vehicles.find(
 x=>String(x.id)===String(id)
 );
 
-return v?v.plaka:'Araç #'+id;
+return v ? v.plaka : 'Araç #'+id;
 
 }
+
 
 
 function render(){
@@ -642,13 +793,11 @@ sel.innerHTML=
 '<option value="">Araç seç</option>'+
 
 vehicles.map(v=>
-
 '<option value="'+v.id+'">'+
 safe(v.plaka)+
 ' — '+
 safe(v.arac_turu)+
 '</option>'
-
 ).join('');
 
 });
@@ -661,9 +810,9 @@ vehicles.length+
 ')</h2>'+
 
 (
-vehicles.length
+vehicles.length ?
 
-?vehicles.map(v=>
+vehicles.map(v=>
 
 '<div class="record">'+
 
@@ -680,32 +829,26 @@ safe(v.arac_turu)+
 '</div>'+
 
 '<div class="muted">'+
-
-safe(
-[v.marka,v.model]
-.filter(Boolean)
-.join(' ')
-)+
-
+safe([v.marka,v.model].filter(Boolean).join(' '))+
 ' • '+
-
 safe(v.guncel_deger||0)+
-
 ' '+
-
 (v.takip_birimi==='saat'?'saat':'km')+
-
 '</div>'+
 
-(v.notlar
-?'<div class="muted">'+safe(v.notlar)+'</div>'
+(v.notlar?
+'<div class="muted">'+
+safe(v.notlar)+
+'</div>'
 :'')+
 
 '</div>'
 
 ).join('')
 
-:'<div class="notice">Henüz araç kaydı yok.</div>'
+:
+
+'<div class="notice">Henüz araç kaydı yok.</div>'
 
 );
 
@@ -715,9 +858,9 @@ $('maintenanceList').innerHTML=
 '<h2 style="margin-top:22px">Bakım Geçmişi</h2>'+
 
 (
-maintenance.length
+maintenance.length ?
 
-?maintenance.map(m=>
+maintenance.map(m=>
 
 '<div class="record">'+
 
@@ -741,7 +884,9 @@ safe(m.yapilan_islem||'')+
 
 ).join('')
 
-:'<div class="notice">Henüz bakım kaydı yok.</div>'
+:
+
+'<div class="notice">Henüz bakım kaydı yok.</div>'
 
 );
 
@@ -751,9 +896,9 @@ $('tiresList').innerHTML=
 '<h2 style="margin-top:22px">Lastik Geçmişi</h2>'+
 
 (
-tires.length
+tires.length ?
 
-?tires.map(t=>
+tires.map(t=>
 
 '<div class="record">'+
 
@@ -781,7 +926,9 @@ safe(t.durum||'')+
 
 ).join('')
 
-:'<div class="notice">Henüz lastik kaydı yok.</div>'
+:
+
+'<div class="notice">Henüz lastik kaydı yok.</div>'
 
 );
 
@@ -791,9 +938,9 @@ $('partsList').innerHTML=
 '<h2 style="margin-top:22px">Parça Geçmişi</h2>'+
 
 (
-parts.length
+parts.length ?
 
-?parts.map(p=>
+parts.map(p=>
 
 '<div class="record">'+
 
@@ -813,11 +960,14 @@ safe(p.adet||1)+
 
 ).join('')
 
-:'<div class="notice">Henüz parça kaydı yok.</div>'
+:
+
+'<div class="notice">Henüz parça kaydı yok.</div>'
 
 );
 
 }
+
 
 
 async function saveForm(form,table){
@@ -837,7 +987,8 @@ const data=formDataObj(form);
 'adet'
 ].forEach(k=>{
 
-if(data[k]!=null)data[k]=Number(data[k]);
+if(data[k]!=null)
+data[k]=Number(data[k]);
 
 });
 
@@ -848,7 +999,8 @@ if(data[k]!=null)data[k]=Number(data[k]);
 'toplam_fiyat'
 ].forEach(k=>{
 
-if(data[k]!=null)data[k]=Number(data[k]);
+if(data[k]!=null)
+data[k]=Number(data[k]);
 
 });
 
@@ -872,14 +1024,16 @@ return;
 
 form.reset();
 
-form.querySelectorAll('input[type="date"]').forEach(
-x=>x.value=today()
-);
+form.querySelectorAll(
+'input[type="date"]'
+).forEach(x=>x.value=today());
 
 
-const adet=form.querySelector('[name="adet"]');
+const adet=
+form.querySelector('[name="adet"]');
 
-if(adet)adet.value='1';
+if(adet)
+adet.value='1';
 
 
 message(
@@ -890,6 +1044,7 @@ message(
 await loadAll();
 
 }
+
 
 
 $('vehicleForm').addEventListener('submit',e=>{
