@@ -6,224 +6,163 @@
 <title>Marhan Filo</title>
 
 <style>
+*{box-sizing:border-box}
 body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,Arial;
-  background:#0c0e11;
-  color:white
+ margin:0;
+ font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
+ background:#0c0e11;
+ color:#fff
 }
 header{
-  padding:22px;
-  background:#15191e;
-  border-bottom:1px solid #2c3239
+ padding:22px;
+ background:#15191e;
+ border-bottom:1px solid #2c3239
 }
 .logo{font-size:25px;font-weight:900}
 .logo span{color:#f2b632}
-.sub,.small{color:#9da6b0}
+.sub{color:#9da6b0;margin-top:5px}
 main{padding:18px;max-width:700px;margin:auto}
 .card{
-  background:#171b20;
-  border:1px solid #2b323a;
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:14px
+ background:#171b20;
+ border:1px solid #2b323a;
+ border-radius:18px;
+ padding:18px;
+ margin-bottom:14px
 }
 h2{margin-top:0}
-button{
-  width:100%;
-  padding:15px;
-  margin-top:10px;
-  border:0;
-  border-radius:13px;
-  background:#f2b632;
-  font-size:16px;
-  font-weight:800;
-  cursor:pointer
-}
 .grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px
 }
-.box,.item{
-  background:#222830;
-  border-radius:14px;
-  padding:15px
+.box{
+ background:#222830;
+ border-radius:14px;
+ padding:15px;
+ text-align:center
 }
-.box{text-align:center}
 .num{font-size:27px;font-weight:900}
-input,select{
-  box-sizing:border-box;
-  width:100%;
-  padding:13px;
-  margin:6px 0;
-  border-radius:10px;
-  border:1px solid #333;
-  background:#0c0e11;
-  color:white;
-  font-size:16px
+.small{font-size:13px;color:#aeb6c0}
+
+summary{
+ display:block;
+ background:#f2b632;
+ color:#111;
+ padding:15px;
+ margin-top:10px;
+ border-radius:13px;
+ text-align:center;
+ font-size:16px;
+ font-weight:800;
+ cursor:pointer
 }
-.form{display:none;margin-top:12px}
-.item{margin-top:8px}
+summary::-webkit-details-marker{display:none}
+
+.form{
+ margin-top:12px;
+ padding:14px;
+ background:#222830;
+ border-radius:14px
+}
+input,select{
+ width:100%;
+ padding:14px;
+ margin:6px 0;
+ border:1px solid #3a424c;
+ border-radius:11px;
+ background:#0c0e11;
+ color:white;
+ font-size:16px
+}
+.save{
+ width:100%;
+ padding:14px;
+ margin-top:8px;
+ border:0;
+ border-radius:11px;
+ background:#f2b632;
+ color:#111;
+ font-size:16px;
+ font-weight:800
+}
 </style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo"><span>MARHAN</span> FİLO</div>
-  <div class="sub">Araç • Makine • Bakım Yönetimi</div>
+ <div class="logo"><span>MARHAN</span> FİLO</div>
+ <div class="sub">Araç • Makine • Bakım Yönetimi</div>
 </header>
 
 <main>
 
 <div class="card">
-  <h2>Filo Özeti</h2>
-
-  <div class="grid">
-    <div class="box">
-      <div class="num">15</div>
-      <div class="small">Kamyon</div>
-    </div>
-
-    <div class="box">
-      <div class="num">5</div>
-      <div class="small">Ekskavatör</div>
-    </div>
-
-    <div class="box">
-      <div class="num">1</div>
-      <div class="small">Silindir</div>
-    </div>
-
-    <div class="box">
-      <div class="num">1</div>
-      <div class="small">CAT 963</div>
-    </div>
-  </div>
+ <h2>Filo Özeti</h2>
+ <div class="grid">
+  <div class="box"><div class="num">15</div><div class="small">Kamyon</div></div>
+  <div class="box"><div class="num">5</div><div class="small">Ekskavatör</div></div>
+  <div class="box"><div class="num">1</div><div class="small">Silindir</div></div>
+  <div class="box"><div class="num">1</div><div class="small">CAT 963</div></div>
+ </div>
 </div>
 
 <div class="card">
-  <h2>Filo Yönetimi</h2>
+ <h2>Filo Yönetimi</h2>
 
-  <button onclick="toggleForm()">Araç / Makine Ekle</button>
-
-  <div id="form" class="form">
-    <input id="plate" placeholder="Plaka / Makine No">
-
-    <select id="type">
-      <option>Kamyon</option>
-      <option>Ekskavatör</option>
-      <option>Silindir</option>
-      <option>CAT 963</option>
-      <option>Diğer</option>
-    </select>
-
-    <input id="brand" placeholder="Marka / Model">
-
-    <input id="km" type="number" placeholder="KM / Çalışma saati">
-
-    <button onclick="saveVehicle()">Kaydet</button>
+ <details>
+  <summary>Araç / Makine Ekle</summary>
+  <div class="form">
+   <input placeholder="Plaka / Makine No">
+   <select>
+    <option>Kamyon</option>
+    <option>Ekskavatör</option>
+    <option>Silindir</option>
+    <option>CAT 963</option>
+    <option>Diğer</option>
+   </select>
+   <input placeholder="Marka / Model">
+   <input type="number" placeholder="KM / Çalışma Saati">
+   <button class="save">Kaydet</button>
   </div>
+ </details>
 
-  <button onclick="alert('Bakım kaydı bölümü hazırlanıyor.')">
-    Bakım Kaydı Ekle
-  </button>
+ <details>
+  <summary>Bakım Kaydı Ekle</summary>
+  <div class="form">
+   <input placeholder="Plaka / Makine No">
+   <input placeholder="Bakım Türü">
+   <input type="date">
+   <input type="number" placeholder="KM / Çalışma Saati">
+  </div>
+ </details>
 
-  <button onclick="alert('Lastik takip bölümü hazırlanıyor.')">
-    Lastik Takibi
-  </button>
+ <details>
+  <summary>Lastik Takibi</summary>
+  <div class="form">
+   <input placeholder="Plaka / Makine No">
+   <input placeholder="Lastik marka / ölçü">
+   <input type="date">
+  </div>
+ </details>
 
-  <button onclick="alert('Değişen parçalar bölümü hazırlanıyor.')">
-    Değişen Parçalar
-  </button>
+ <details>
+  <summary>Değişen Parçalar</summary>
+  <div class="form">
+   <input placeholder="Plaka / Makine No">
+   <input placeholder="Değişen Parça">
+   <input type="date">
+  </div>
+ </details>
+
 </div>
 
 <div class="card">
-  <h2>Kayıtlı Araç / Makineler</h2>
-  <div id="list" class="small"></div>
-</div>
-
-<div class="card">
-  <h2>Bakım Uyarıları</h2>
-  <div class="small">
-    Yaklaşan ve geciken bakımlar burada gösterilecek.
-  </div>
+ <h2>Bakım Uyarıları</h2>
+ <div class="small">Yaklaşan ve geciken bakımlar burada gösterilecek.</div>
 </div>
 
 </main>
-
-<script>
-function toggleForm(){
-  const form = document.getElementById("form");
-
-  if(form.style.display === "block"){
-    form.style.display = "none";
-  }else{
-    form.style.display = "block";
-  }
-}
-
-function getVehicles(){
-  return JSON.parse(
-    localStorage.getItem("marhanVehicles") || "[]"
-  );
-}
-
-function saveVehicle(){
-  const plate = document.getElementById("plate").value.trim();
-  const type = document.getElementById("type").value;
-  const brand = document.getElementById("brand").value.trim();
-  const km = document.getElementById("km").value;
-
-  if(!plate){
-    alert("Plaka veya makine numarası gir.");
-    return;
-  }
-
-  const vehicles = getVehicles();
-
-  vehicles.push({
-    plate: plate,
-    type: type,
-    brand: brand,
-    km: km
-  });
-
-  localStorage.setItem(
-    "marhanVehicles",
-    JSON.stringify(vehicles)
-  );
-
-  document.getElementById("plate").value = "";
-  document.getElementById("brand").value = "";
-  document.getElementById("km").value = "";
-
-  toggleForm();
-  renderVehicles();
-}
-
-function renderVehicles(){
-  const vehicles = getVehicles();
-  const list = document.getElementById("list");
-
-  if(vehicles.length === 0){
-    list.innerHTML = "Henüz araç veya makine eklenmedi.";
-    return;
-  }
-
-  list.innerHTML = vehicles.map(function(v){
-    return `
-      <div class="item">
-        <b>${v.plate}</b><br>
-        ${v.type} • ${v.brand || "-"} • ${v.km || 0} KM/Saat
-      </div>
-    `;
-  }).join("");
-}
-
-renderVehicles();
-</script>
 
 </body>
 </html>
