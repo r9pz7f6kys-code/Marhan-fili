@@ -2,60 +2,55 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0c0e11">
 <title>Marhan Filo</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#0c0e11;color:#fff}
-header{padding:20px;background:#15191e;border-bottom:1px solid #2c3239;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.logo{font-size:25px;font-weight:900}
-.logo span{color:#f2b632}
-.sub,.small,.muted{color:#aeb6c0}
-.sub{margin-top:5px;font-size:13px}
-.muted{font-size:13px}
-main{padding:16px;max-width:760px;margin:auto}
-.card{background:#171b20;border:1px solid #2b323a;border-radius:18px;padding:18px;margin-bottom:14px}
+body{margin:0;background:#0c0e11;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{position:sticky;top:0;z-index:10;padding:17px;background:#15191e;border-bottom:1px solid #2b323a;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:24px;font-weight:900}.logo span{color:#f2b632}
+.sub,.muted{color:#aeb6c0;font-size:13px}
+main{max-width:900px;margin:auto;padding:14px}
+.card{background:#171b20;border:1px solid #2b323a;border-radius:17px;padding:15px;margin-bottom:13px}
 h2{margin:0 0 12px;font-size:20px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.box{background:#222830;border-radius:14px;padding:14px;text-align:center}
-.num{font-size:27px;font-weight:900}
-
-input,select,textarea{
-width:100%;padding:13px;margin:6px 0;border:1px solid #3a424c;
-border-radius:11px;background:#0c0e11;color:white;font-size:16px
-}
-textarea{min-height:72px}
-
-button{
-border:0;border-radius:12px;padding:13px;background:#f2b632;
-color:#111;font-size:15px;font-weight:800;cursor:pointer
-}
-.primary{width:100%;margin-top:8px}
+h3{margin:15px 0 8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.stats{grid-template-columns:repeat(2,1fr)}
+.box{background:#222830;border-radius:14px;padding:14px}
+.num{font-size:25px;font-weight:900;color:#f2b632}
+input,select,textarea{width:100%;padding:13px;margin:5px 0;border:1px solid #3a424c;border-radius:11px;background:#0c0e11;color:#fff;font-size:16px}
+textarea{min-height:70px}
+button{border:0;border-radius:11px;padding:12px;font-weight:800;font-size:14px;background:#f2b632;color:#111}
+.primary{width:100%;margin-top:7px}
 .secondary{background:#29313a;color:#fff}
-.linkbtn{background:transparent;color:#f2b632;width:100%;margin-top:9px}
+.danger{background:#7f2525;color:#fff}
+.green{background:#27724a;color:#fff}
 .hidden{display:none!important}
-
-.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:14px}
+.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:13px}
 .tabs button{white-space:nowrap;flex:1}
 .tabs button.active{background:#f2b632;color:#111}
-
-.record{background:#222830;border-radius:13px;padding:13px;margin-top:9px;overflow-wrap:anywhere}
-.record strong{font-size:16px}
-.row{display:flex;gap:8px;align-items:center;justify-content:space-between}
-.notice{padding:12px;border-radius:12px;background:#242b32;color:#dce2e8;margin:10px 0;font-size:14px}
+.record{background:#222830;border-radius:13px;padding:13px;margin-top:9px}
+.row{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.pill{font-size:11px;background:#f2b632;color:#111;padding:5px 8px;border-radius:20px;font-weight:800}
+.notice{padding:11px;border-radius:11px;background:#242b32;margin:9px 0;font-size:14px}
+.warning{border-left:4px solid #f2b632}
+.overdue{border-left:4px solid #e2574c}
 .auth{max-width:430px;margin:35px auto}
-.auth h2{font-size:24px}
-.pill{font-size:12px;color:#111;background:#f2b632;border-radius:20px;padding:5px 8px}
-
-@media(min-width:650px){
-main{padding:22px}
-.grid.stats{grid-template-columns:repeat(4,1fr)}
+.actions{display:flex;gap:6px;margin-top:9px}
+.actions button{flex:1;padding:9px}
+.money{font-weight:900;color:#f2b632}
+.search{margin-bottom:10px}
+.exportGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(min-width:700px){
+ .stats{grid-template-columns:repeat(5,1fr)}
+ main{padding:20px}
 }
 </style>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -63,7 +58,7 @@ main{padding:22px}
 <header>
 <div>
 <div class="logo"><span>MARHAN</span> FİLO</div>
-<div class="sub">Araç • Makine • Bakım Yönetimi</div>
+<div class="sub">Merkezi Filo • Bakım • Masraf Yönetimi</div>
 </div>
 <button id="logout" class="secondary hidden">Çıkış</button>
 </header>
@@ -72,80 +67,73 @@ main{padding:22px}
 
 <section id="authView" class="card auth">
 <h2>Marhan Filo Giriş</h2>
-<div class="muted">Yetkili kullanıcı hesabınızla giriş yapın.</div>
+<p class="muted">Yetkili hesabınızla giriş yapın.</p>
 
 <form id="authForm">
-<input id="email" type="email" autocomplete="email" required placeholder="E-posta adresi">
-<input id="password" type="password" autocomplete="current-password" minlength="8" required placeholder="Şifre">
-
-<button class="primary" type="submit" id="loginBtn">Giriş Yap</button>
-<button class="primary secondary" type="button" id="signupBtn">İlk Hesabımı Oluştur</button>
-<button class="linkbtn" type="button" id="forgotBtn">Şifremi Unuttum</button>
+<input id="email" type="email" required placeholder="E-posta">
+<input id="password" type="password" minlength="8" required placeholder="Şifre">
+<button id="loginBtn" class="primary">Giriş Yap</button>
 </form>
 
+<button id="forgotBtn" class="primary secondary">Şifremi Unuttum</button>
 <div id="authMsg" class="notice hidden"></div>
-
-<p class="muted">
-Yalnızca Marhan Filo tarafından yetkilendirilen kullanıcılar filo verilerine erişebilir.
-</p>
 </section>
-
 
 <section id="resetView" class="card auth hidden">
-
 <h2>Yeni Şifre Belirle</h2>
-
-<div class="muted">
-Yeni şifren en az 8 karakter olmalıdır.
-</div>
-
 <input id="newPassword" type="password" minlength="8" placeholder="Yeni şifre">
 <input id="newPassword2" type="password" minlength="8" placeholder="Yeni şifre tekrar">
-
 <button id="savePassword" class="primary">Yeni Şifreyi Kaydet</button>
-
 <div id="resetMsg" class="notice hidden"></div>
-
 </section>
-
 
 <section id="appView" class="hidden">
 
 <div class="card">
-
 <div class="row">
 <div>
 <h2>Filo Özeti</h2>
 <div id="welcome" class="muted"></div>
 </div>
-
-<span class="pill">MERKEZİ KAYIT</span>
+<span class="pill">CANLI</span>
 </div>
 
 <div class="grid stats">
-<div class="box"><div class="num" id="truckCount">0</div><div class="small">Kamyon</div></div>
-<div class="box"><div class="num" id="excavatorCount">0</div><div class="small">Ekskavatör</div></div>
-<div class="box"><div class="num" id="otherCount">0</div><div class="small">Diğer</div></div>
-<div class="box"><div class="num" id="maintenanceCount">0</div><div class="small">Bakım</div></div>
+<div class="box"><div class="num" id="vehicleCount">0</div><div class="muted">Araç/Makine</div></div>
+<div class="box"><div class="num" id="maintenanceCount">0</div><div class="muted">Bakım</div></div>
+<div class="box"><div class="num" id="tireCount">0</div><div class="muted">Lastik</div></div>
+<div class="box"><div class="num" id="partCount">0</div><div class="muted">Parça</div></div>
+<div class="box"><div class="num" id="totalCost">₺0</div><div class="muted">Toplam Masraf</div></div>
+</div>
 </div>
 
+<div id="alertsCard" class="card">
+<h2>⚠️ Bakım Uyarıları</h2>
+<div id="alerts"></div>
 </div>
 
+<div class="card">
+<h2>Raporlar</h2>
+<div class="exportGrid">
+<button id="excelBtn" class="green">Excel'e Aktar</button>
+<button id="refreshBtn" class="secondary">Verileri Yenile</button>
+</div>
+</div>
 
 <div class="tabs" id="tabs">
 <button data-tab="vehicles" class="active">Araçlar</button>
-<button data-tab="maintenance">Bakımlar</button>
-<button data-tab="tires">Lastikler</button>
-<button data-tab="parts">Parçalar</button>
+<button data-tab="maintenance">Bakım</button>
+<button data-tab="tires">Lastik</button>
+<button data-tab="parts">Parça</button>
 </div>
 
-
 <section id="vehiclesPanel" class="card panel">
+<h2>Araç / Makine</h2>
 
-<h2>Araç / Makine Ekle</h2>
+<input id="vehicleSearch" class="search" placeholder="🔎 Plaka, marka veya model ara">
 
 <form id="vehicleForm">
-
+<input type="hidden" name="edit_id">
 <input name="plaka" required placeholder="Plaka / Makine No">
 
 <select name="arac_turu">
@@ -162,80 +150,52 @@ Yeni şifren en az 8 karakter olmalıdır.
 </div>
 
 <div class="grid">
-
-<input name="model_yili" type="number" min="1950" max="2100" placeholder="Model yılı">
-
+<input name="model_yili" type="number" placeholder="Model yılı">
 <select name="takip_birimi">
 <option value="km">Kilometre</option>
 <option value="saat">Çalışma saati</option>
 </select>
-
 </div>
 
 <input name="guncel_deger" type="number" min="0" value="0" placeholder="Güncel KM / saat">
-
 <textarea name="notlar" placeholder="Notlar"></textarea>
 
 <button class="primary" type="submit">Aracı Kaydet</button>
-
+<button id="vehicleCancelEdit" type="button" class="primary secondary hidden">Düzenlemeyi İptal Et</button>
 </form>
 
 <div id="vehiclesList"></div>
-
 </section>
 
-
 <section id="maintenancePanel" class="card panel hidden">
-
-<h2>Bakım Kaydı Ekle</h2>
+<h2>Bakım Kaydı</h2>
 
 <form id="maintenanceForm">
-
 <select name="arac_id" class="vehicleSelect" required></select>
-
 <input name="tarih" type="date" required>
-
 <input name="bakim_turu" required placeholder="Bakım türü">
-
 <input name="km_saat" type="number" min="0" placeholder="KM / çalışma saati">
-
 <input name="yapilan_islem" placeholder="Yapılan işlem">
-
 <input name="sonraki_bakim" type="number" min="0" placeholder="Sonraki bakım KM / saat">
-
 <input name="servis_usta" placeholder="Servis / usta">
-
-<input name="maliyet" type="number" min="0" step="0.01" placeholder="Maliyet (₺)">
-
+<input name="maliyet" type="number" min="0" step=".01" placeholder="Maliyet ₺">
 <textarea name="aciklama" placeholder="Açıklama"></textarea>
-
-<button class="primary" type="submit">Bakımı Kaydet</button>
-
+<button class="primary">Bakımı Kaydet</button>
 </form>
 
 <div id="maintenanceList"></div>
-
 </section>
 
-
 <section id="tiresPanel" class="card panel hidden">
-
 <h2>Lastik Takibi</h2>
 
 <form id="tireForm">
-
 <select name="arac_id" class="vehicleSelect" required></select>
-
 <input name="tarih" type="date" required>
-
-<input name="konum" required placeholder="Konum (örn. ön sağ)">
-
+<input name="konum" required placeholder="Konum (Ön sağ vb.)">
 <input name="marka" placeholder="Marka">
-
 <input name="model" placeholder="Model">
-
-<input name="ebat" placeholder="Lastik ölçüsü">
-
+<input name="ebat" placeholder="Ebat">
 <input name="seri_no" placeholder="Seri no">
 
 <select name="durum">
@@ -246,859 +206,652 @@ Yeni şifren en az 8 karakter olmalıdır.
 </select>
 
 <input name="km" type="number" min="0" placeholder="Araç KM">
-
 <input name="takilma_km" type="number" min="0" placeholder="Takıldığı KM">
-
-<input name="maliyet" type="number" min="0" step="0.01" placeholder="Maliyet (₺)">
-
+<input name="maliyet" type="number" min="0" step=".01" placeholder="Maliyet ₺">
 <textarea name="aciklama" placeholder="Açıklama"></textarea>
 
-<button class="primary" type="submit">Lastiği Kaydet</button>
-
+<button class="primary">Lastiği Kaydet</button>
 </form>
 
 <div id="tiresList"></div>
-
 </section>
 
-
 <section id="partsPanel" class="card panel hidden">
-
-<h2>Değişen Parça Ekle</h2>
+<h2>Parça Kaydı</h2>
 
 <form id="partForm">
-
 <select name="arac_id" class="vehicleSelect" required></select>
-
 <input name="tarih" type="date" required>
-
 <input name="parca_adi" required placeholder="Parça adı">
-
 <input name="marka" placeholder="Marka">
-
 <input name="parca_no" placeholder="Parça numarası">
 
 <div class="grid">
 <input name="adet" type="number" min="1" value="1" placeholder="Adet">
-<input name="km_saat" type="number" min="0" placeholder="KM / çalışma saati">
+<input name="km_saat" type="number" min="0" placeholder="KM / saat">
 </div>
 
-<input name="birim_fiyat" type="number" min="0" step="0.01" placeholder="Birim fiyat (₺)">
-
-<input name="toplam_fiyat" type="number" min="0" step="0.01" placeholder="Toplam fiyat (₺)">
-
+<input name="birim_fiyat" type="number" min="0" step=".01" placeholder="Birim fiyat ₺">
+<input name="toplam_fiyat" type="number" min="0" step=".01" placeholder="Toplam fiyat ₺">
 <textarea name="aciklama" placeholder="Açıklama"></textarea>
 
-<button class="primary" type="submit">Parçayı Kaydet</button>
-
+<button class="primary">Parçayı Kaydet</button>
 </form>
 
 <div id="partsList"></div>
-
 </section>
 
 <div id="appMsg" class="notice hidden"></div>
 
 </section>
-
 </main>
 
-
 <script>
+const SUPABASE_URL="https://qccpcepsgfepuyltamae.supabase.co";
+const SUPABASE_KEY="sb_publishable_mKOALiZdR_RpkMt028nbIA_vOv0epVz";
 
-(function(){
-
-const SUPABASE_URL='https://qccpcepsgfepuyltamae.supabase.co';
-const SUPABASE_KEY='sb_publishable_mKOALiZdR_RpkMt028nbIA_vOv0epVz';
-
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let vehicles=[];
 let maintenance=[];
 let tires=[];
 let parts=[];
+let currentMember=null;
 
 const $=id=>document.getElementById(id);
-
 const today=()=>new Date().toISOString().slice(0,10);
 
-document.querySelectorAll('input[type="date"]').forEach(x=>x.value=today());
-
-
-function message(id,text){
-
-const box=$(id);
-
-box.textContent=text;
-
-box.classList.remove('hidden');
-
+function msg(id,text){
+ const x=$(id);
+ x.textContent=text;
+ x.classList.remove("hidden");
 }
 
-
-function clearMessage(id){
-
-$(id).classList.add('hidden');
-
+function clearMsg(id){
+ $(id).classList.add("hidden");
 }
 
-
-function safe(value){
-
-return String(value==null?'':value).replace(/[&<>"']/g,c=>({
-'&':'&amp;',
-'<':'&lt;',
-'>':'&gt;',
-'"':'&quot;',
-"'":'&#39;'
-}[c]));
-
+function safe(v){
+ return String(v??"").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[c]);
 }
 
-
-function formDataObj(form){
-
-const obj=Object.fromEntries(new FormData(form).entries());
-
-Object.keys(obj).forEach(k=>{
-if(obj[k]==='') obj[k]=null;
-});
-
-return obj;
-
+function money(v){
+ return new Intl.NumberFormat("tr-TR",{
+  style:"currency",
+  currency:"TRY",
+  maximumFractionDigits:0
+ }).format(Number(v)||0);
 }
 
-
-function isRecovery(){
-
-return location.hash.includes('type=recovery') ||
-location.search.includes('type=recovery');
-
+function formObj(form){
+ const o=Object.fromEntries(new FormData(form).entries());
+ Object.keys(o).forEach(k=>{
+  if(o[k]==="") o[k]=null;
+ });
+ return o;
 }
 
+function setDates(){
+ document.querySelectorAll('input[type="date"]').forEach(x=>{
+  if(!x.value)x.value=today();
+ });
+}
+
+setDates();
 
 async function authState(){
+ const {data:{session}}=await db.auth.getSession();
 
-const {data:{session}}=await db.auth.getSession();
+ if(!session){
+  $("authView").classList.remove("hidden");
+  $("appView").classList.add("hidden");
+  $("logout").classList.add("hidden");
+  return;
+ }
 
+ const {data:member,error}=await db
+ .from("company_members")
+ .select("role,email")
+ .eq("user_id",session.user.id)
+ .maybeSingle();
 
-if(isRecovery()){
+ if(error||!member){
+  await db.auth.signOut();
+  msg("authMsg","Bu hesap Marhan Filo için yetkili değil.");
+  return;
+ }
 
-$('authView').classList.add('hidden');
+ currentMember=member;
 
-$('appView').classList.add('hidden');
+ $("authView").classList.add("hidden");
+ $("resetView").classList.add("hidden");
+ $("appView").classList.remove("hidden");
+ $("logout").classList.remove("hidden");
 
-$('resetView').classList.remove('hidden');
+ $("welcome").textContent=
+ session.user.email+" • "+(member.role==="admin"?"Yönetici":"Kullanıcı");
 
-$('logout').classList.add('hidden');
-
-return;
-
+ await loadAll();
 }
 
+$("authForm").addEventListener("submit",async e=>{
+ e.preventDefault();
 
-if(!session){
+ clearMsg("authMsg");
 
-$('authView').classList.remove('hidden');
+ const email=$("email").value.trim();
+ const password=$("password").value;
 
-$('resetView').classList.add('hidden');
+ $("loginBtn").disabled=true;
 
-$('appView').classList.add('hidden');
+ const {error}=await db.auth.signInWithPassword({email,password});
 
-$('logout').classList.add('hidden');
+ $("loginBtn").disabled=false;
 
-return;
+ if(error){
+  msg("authMsg","Giriş yapılamadı: "+error.message);
+  return;
+ }
 
-}
-
-
-const {data:member,error}=await db
-.from('company_members')
-.select('role,email')
-.eq('user_id',session.user.id)
-.maybeSingle();
-
-
-if(error || !member){
-
-await db.auth.signOut();
-
-$('authView').classList.remove('hidden');
-
-$('appView').classList.add('hidden');
-
-$('logout').classList.add('hidden');
-
-message('authMsg','Bu e-posta Marhan Filo için yetkilendirilmemiş.');
-
-return;
-
-}
-
-
-$('authView').classList.add('hidden');
-
-$('resetView').classList.add('hidden');
-
-$('appView').classList.remove('hidden');
-
-$('logout').classList.remove('hidden');
-
-$('welcome').textContent=
-session.user.email+' • '+(member.role==='admin'?'Yönetici':'Kullanıcı');
-
-clearMessage('authMsg');
-
-await loadAll();
-
-}
-
-
-
-$('authForm').addEventListener('submit',async e=>{
-
-e.preventDefault();
-
-clearMessage('authMsg');
-
-$('loginBtn').disabled=true;
-
-const email=$('email').value.trim();
-
-const password=$('password').value;
-
-const {error}=await db.auth.signInWithPassword({
-email,
-password
+ await authState();
 });
 
-$('loginBtn').disabled=false;
-
-if(error){
-
-message('authMsg','Giriş yapılamadı: '+error.message);
-
-return;
-
-}
-
-await authState();
-
-});
-
-
-
-$('signupBtn').addEventListener('click',async()=>{
-
-clearMessage('authMsg');
-
-const email=$('email').value.trim();
-
-const password=$('password').value;
-
-if(!email || password.length<8){
-
-message(
-'authMsg',
-'E-posta gir ve en az 8 karakterli bir şifre belirle.'
-);
-
-return;
-
-}
-
-$('signupBtn').disabled=true;
-
-const {data,error}=await db.auth.signUp({
-email,
-password
-});
-
-$('signupBtn').disabled=false;
-
-if(error){
-
-message('authMsg','Hesap oluşturulamadı: '+error.message);
-
-return;
-
-}
-
-if(data.session){
-
-await authState();
-
-}else{
-
-message(
-'authMsg',
-'Hesap oluşturuldu. E-posta doğrulama mesajı geldiyse bağlantıya bas, ardından giriş yap.'
-);
-
-}
-
-});
-
-
-
-$('forgotBtn').addEventListener('click',async()=>{
-
-clearMessage('authMsg');
-
-const email=$('email').value.trim();
-
-if(!email){
-
-message(
-'authMsg',
-'Önce e-posta adresini yaz.'
-);
-
-return;
-
-}
-
-$('forgotBtn').disabled=true;
-
-const redirectTo=
-location.origin+
-location.pathname;
-
-const {error}=await db.auth.resetPasswordForEmail(
-email,
-{redirectTo}
-);
-
-$('forgotBtn').disabled=false;
-
-if(error){
-
-message(
-'authMsg',
-'Şifre yenileme bağlantısı gönderilemedi: '+error.message
-);
-
-return;
-
-}
-
-message(
-'authMsg',
-'Şifre yenileme bağlantısı e-posta adresine gönderildi. Gelen e-postadaki bağlantıya bas.'
-);
-
-});
-
-
-
-$('savePassword').addEventListener('click',async()=>{
-
-clearMessage('resetMsg');
-
-const p1=$('newPassword').value;
-
-const p2=$('newPassword2').value;
-
-if(p1.length<8){
-
-message(
-'resetMsg',
-'Şifre en az 8 karakter olmalı.'
-);
-
-return;
-
-}
-
-if(p1!==p2){
-
-message(
-'resetMsg',
-'İki şifre aynı değil.'
-);
-
-return;
-
-}
-
-$('savePassword').disabled=true;
-
-const {error}=await db.auth.updateUser({
-password:p1
-});
-
-$('savePassword').disabled=false;
-
-if(error){
-
-message(
-'resetMsg',
-'Şifre değiştirilemedi: '+error.message
-);
-
-return;
-
-}
-
-message(
-'resetMsg',
-'Şifren değiştirildi. Giriş ekranına yönlendiriliyorsun.'
-);
-
-setTimeout(async()=>{
-
-await db.auth.signOut();
-
-history.replaceState(
-null,
-'',
-location.pathname
-);
-
-location.reload();
-
-},1500);
-
-});
-
-
-
-$('logout').addEventListener('click',async()=>{
-
-await db.auth.signOut();
-
-location.reload();
-
-});
-
-
+$("forgotBtn").onclick=async()=>{
+ const email=$("email").value.trim();
+
+ if(!email){
+  msg("authMsg","Önce e-posta adresini yaz.");
+  return;
+ }
+
+ const redirectTo=location.origin+location.pathname;
+
+ const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo});
+
+ if(error){
+  msg("authMsg","Şifre bağlantısı gönderilemedi: "+error.message);
+ }else{
+  msg("authMsg","Şifre yenileme bağlantısı e-posta adresine gönderildi.");
+ }
+};
 
 db.auth.onAuthStateChange((event)=>{
-
-if(event==='PASSWORD_RECOVERY'){
-
-$('authView').classList.add('hidden');
-
-$('appView').classList.add('hidden');
-
-$('resetView').classList.remove('hidden');
-
-return;
-
-}
-
-setTimeout(authState,0);
-
+ if(event==="PASSWORD_RECOVERY"){
+  $("authView").classList.add("hidden");
+  $("appView").classList.add("hidden");
+  $("resetView").classList.remove("hidden");
+ }
 });
 
+$("savePassword").onclick=async()=>{
+ const a=$("newPassword").value;
+ const b=$("newPassword2").value;
 
+ if(a.length<8){
+  msg("resetMsg","Şifre en az 8 karakter olmalı.");
+  return;
+ }
 
-document.querySelectorAll('#tabs button').forEach(btn=>{
+ if(a!==b){
+  msg("resetMsg","Şifreler aynı değil.");
+  return;
+ }
 
-btn.addEventListener('click',()=>{
+ const {error}=await db.auth.updateUser({password:a});
 
-document.querySelectorAll('#tabs button').forEach(
-b=>b.classList.toggle('active',b===btn)
-);
+ if(error){
+  msg("resetMsg","Şifre değiştirilemedi: "+error.message);
+  return;
+ }
 
-document.querySelectorAll('.panel').forEach(
-p=>p.classList.add('hidden')
-);
+ msg("resetMsg","Şifre değiştirildi.");
+ setTimeout(()=>location.href=location.origin+location.pathname,1200);
+};
 
-$(btn.dataset.tab+'Panel').classList.remove('hidden');
+$("logout").onclick=async()=>{
+ await db.auth.signOut();
+ location.reload();
+};
 
+db.auth.onAuthStateChange(event=>{
+ if(event!=="PASSWORD_RECOVERY"){
+  setTimeout(authState,0);
+ }
 });
 
+document.querySelectorAll("#tabs button").forEach(btn=>{
+ btn.onclick=()=>{
+  document.querySelectorAll("#tabs button").forEach(x=>
+   x.classList.toggle("active",x===btn)
+  );
+
+  document.querySelectorAll(".panel").forEach(x=>x.classList.add("hidden"));
+  $(btn.dataset.tab+"Panel").classList.remove("hidden");
+ };
 });
-
-
 
 async function loadAll(){
+ clearMsg("appMsg");
 
-clearMessage('appMsg');
+ const r=await Promise.all([
+  db.from("araclar").select("*").order("plaka"),
+  db.from("bakimlar").select("*").order("tarih",{ascending:false}),
+  db.from("lastikler").select("*").order("tarih",{ascending:false}),
+  db.from("parcalar").select("*").order("tarih",{ascending:false})
+ ]);
 
-const results=await Promise.all([
+ const bad=r.find(x=>x.error);
 
-db.from('araclar').select('*').order('plaka'),
+ if(bad){
+  msg("appMsg","Veriler yüklenemedi: "+bad.error.message);
+  return;
+ }
 
-db.from('bakimlar').select('*').order('tarih',{ascending:false}),
+ vehicles=r[0].data||[];
+ maintenance=r[1].data||[];
+ tires=r[2].data||[];
+ parts=r[3].data||[];
 
-db.from('lastikler').select('*').order('tarih',{ascending:false}),
-
-db.from('parcalar').select('*').order('tarih',{ascending:false})
-
-]);
-
-
-const failed=results.find(r=>r.error);
-
-if(failed){
-
-message(
-'appMsg',
-'Veriler yüklenemedi: '+failed.error.message
-);
-
-return;
-
+ render();
 }
-
-
-vehicles=results[0].data || [];
-
-maintenance=results[1].data || [];
-
-tires=results[2].data || [];
-
-parts=results[3].data || [];
-
-render();
-
-}
-
-
 
 function vehicleName(id){
-
-const v=vehicles.find(
-x=>String(x.id)===String(id)
-);
-
-return v ? v.plaka : 'Araç #'+id;
-
+ const v=vehicles.find(x=>String(x.id)===String(id));
+ return v?v.plaka:"Araç #"+id;
 }
 
-
+function vehicleById(id){
+ return vehicles.find(x=>String(x.id)===String(id));
+}
 
 function render(){
-
-$('truckCount').textContent=
-vehicles.filter(v=>v.arac_turu==='Kamyon').length;
-
-$('excavatorCount').textContent=
-vehicles.filter(v=>v.arac_turu==='Ekskavatör').length;
-
-$('otherCount').textContent=
-vehicles.filter(
-v=>!['Kamyon','Ekskavatör'].includes(v.arac_turu)
-).length;
-
-$('maintenanceCount').textContent=
-maintenance.length;
-
-
-document.querySelectorAll('.vehicleSelect').forEach(sel=>{
-
-sel.innerHTML=
-'<option value="">Araç seç</option>'+
-
-vehicles.map(v=>
-'<option value="'+v.id+'">'+
-safe(v.plaka)+
-' — '+
-safe(v.arac_turu)+
-'</option>'
-).join('');
-
-});
-
-
-$('vehiclesList').innerHTML=
-
-'<h2 style="margin-top:22px">Kayıtlı Araçlar ('+
-vehicles.length+
-')</h2>'+
-
-(
-vehicles.length ?
-
-vehicles.map(v=>
-
-'<div class="record">'+
-
-'<div class="row">'+
-
-'<strong>'+
-safe(v.plaka)+
-'</strong>'+
-
-'<span class="pill">'+
-safe(v.arac_turu)+
-'</span>'+
-
-'</div>'+
-
-'<div class="muted">'+
-safe([v.marka,v.model].filter(Boolean).join(' '))+
-' • '+
-safe(v.guncel_deger||0)+
-' '+
-(v.takip_birimi==='saat'?'saat':'km')+
-'</div>'+
-
-(v.notlar?
-'<div class="muted">'+
-safe(v.notlar)+
-'</div>'
-:'')+
-
-'</div>'
-
-).join('')
-
-:
-
-'<div class="notice">Henüz araç kaydı yok.</div>'
-
-);
-
-
-$('maintenanceList').innerHTML=
-
-'<h2 style="margin-top:22px">Bakım Geçmişi</h2>'+
-
-(
-maintenance.length ?
-
-maintenance.map(m=>
-
-'<div class="record">'+
-
-'<strong>'+
-safe(vehicleName(m.arac_id))+
-' • '+
-safe(m.bakim_turu)+
-'</strong>'+
-
-'<div class="muted">'+
-safe(m.tarih)+
-' • '+
-safe(m.km_saat||'-')+
-' KM/Saat</div>'+
-
-'<div class="muted">'+
-safe(m.yapilan_islem||'')+
-'</div>'+
-
-'</div>'
-
-).join('')
-
-:
-
-'<div class="notice">Henüz bakım kaydı yok.</div>'
-
-);
-
-
-$('tiresList').innerHTML=
-
-'<h2 style="margin-top:22px">Lastik Geçmişi</h2>'+
-
-(
-tires.length ?
-
-tires.map(t=>
-
-'<div class="record">'+
-
-'<strong>'+
-safe(vehicleName(t.arac_id))+
-' • '+
-safe(t.konum)+
-'</strong>'+
-
-'<div class="muted">'+
-safe(t.marka||'')+
-' '+
-safe(t.model||'')+
-' • '+
-safe(t.ebat||'')+
-'</div>'+
-
-'<div class="muted">'+
-safe(t.tarih)+
-' • '+
-safe(t.durum||'')+
-'</div>'+
-
-'</div>'
-
-).join('')
-
-:
-
-'<div class="notice">Henüz lastik kaydı yok.</div>'
-
-);
-
-
-$('partsList').innerHTML=
-
-'<h2 style="margin-top:22px">Parça Geçmişi</h2>'+
-
-(
-parts.length ?
-
-parts.map(p=>
-
-'<div class="record">'+
-
-'<strong>'+
-safe(vehicleName(p.arac_id))+
-' • '+
-safe(p.parca_adi)+
-'</strong>'+
-
-'<div class="muted">'+
-safe(p.tarih)+
-' • Adet: '+
-safe(p.adet||1)+
-'</div>'+
-
-'</div>'
-
-).join('')
-
-:
-
-'<div class="notice">Henüz parça kaydı yok.</div>'
-
-);
-
+ $("vehicleCount").textContent=vehicles.length;
+ $("maintenanceCount").textContent=maintenance.length;
+ $("tireCount").textContent=tires.length;
+ $("partCount").textContent=parts.length;
+
+ const total=
+ maintenance.reduce((s,x)=>s+(Number(x.maliyet)||0),0)+
+ tires.reduce((s,x)=>s+(Number(x.maliyet)||0),0)+
+ parts.reduce((s,x)=>s+(Number(x.toplam_fiyat)||0),0);
+
+ $("totalCost").textContent=money(total);
+
+ document.querySelectorAll(".vehicleSelect").forEach(sel=>{
+  const old=sel.value;
+
+  sel.innerHTML=
+  '<option value="">Araç seç</option>'+
+  vehicles.map(v=>
+   `<option value="${v.id}">${safe(v.plaka)} — ${safe(v.arac_turu)}</option>`
+  ).join("");
+
+  if(old)sel.value=old;
+ });
+
+ renderVehicles();
+ renderMaintenance();
+ renderTires();
+ renderParts();
+ renderAlerts();
 }
 
+function renderVehicles(){
+ const q=$("vehicleSearch").value.toLocaleLowerCase("tr");
 
+ const list=vehicles.filter(v=>
+  [v.plaka,v.marka,v.model,v.arac_turu]
+  .join(" ")
+  .toLocaleLowerCase("tr")
+  .includes(q)
+ );
+
+ $("vehiclesList").innerHTML=
+ `<h3>Kayıtlı Araçlar (${list.length})</h3>`+
+ (list.length?list.map(v=>{
+
+  const costs=
+   maintenance.filter(x=>String(x.arac_id)===String(v.id))
+    .reduce((s,x)=>s+(Number(x.maliyet)||0),0)+
+   tires.filter(x=>String(x.arac_id)===String(v.id))
+    .reduce((s,x)=>s+(Number(x.maliyet)||0),0)+
+   parts.filter(x=>String(x.arac_id)===String(v.id))
+    .reduce((s,x)=>s+(Number(x.toplam_fiyat)||0),0);
+
+  return `
+  <div class="record">
+   <div class="row">
+    <strong>${safe(v.plaka)}</strong>
+    <span class="pill">${safe(v.arac_turu)}</span>
+   </div>
+
+   <div class="muted">
+   ${safe([v.marka,v.model,v.model_yili].filter(Boolean).join(" • "))}
+   </div>
+
+   <div class="muted">
+   Güncel: ${safe(v.guncel_deger||0)}
+   ${v.takip_birimi==="saat"?"saat":"km"}
+   </div>
+
+   <div class="money">Toplam masraf: ${money(costs)}</div>
+
+   ${v.notlar?`<div class="muted">${safe(v.notlar)}</div>`:""}
+
+   <div class="actions">
+    <button onclick="historyView('${v.id}')" class="secondary">Geçmiş</button>
+    <button onclick="editVehicle('${v.id}')" class="secondary">Düzenle</button>
+    ${currentMember?.role==="admin"
+     ?`<button onclick="deleteRecord('araclar','${v.id}')" class="danger">Sil</button>`
+     :""
+    }
+   </div>
+  </div>`;
+ }).join(""):'<div class="notice">Araç bulunamadı.</div>');
+}
+
+$("vehicleSearch").oninput=renderVehicles;
+
+function renderMaintenance(){
+ $("maintenanceList").innerHTML=
+ "<h3>Bakım Geçmişi</h3>"+
+ (maintenance.length?maintenance.map(x=>`
+ <div class="record">
+ <strong>${safe(vehicleName(x.arac_id))} • ${safe(x.bakim_turu)}</strong>
+ <div class="muted">${safe(x.tarih)} • ${safe(x.km_saat??"-")} KM/Saat</div>
+ <div>${safe(x.yapilan_islem||"")}</div>
+ <div class="money">${money(x.maliyet)}</div>
+ ${currentMember?.role==="admin"
+ ?`<div class="actions"><button class="danger" onclick="deleteRecord('bakimlar','${x.id}')">Sil</button></div>`
+ :""}
+ </div>`).join("")
+ :'<div class="notice">Bakım kaydı yok.</div>');
+}
+
+function renderTires(){
+ $("tiresList").innerHTML=
+ "<h3>Lastik Geçmişi</h3>"+
+ (tires.length?tires.map(x=>`
+ <div class="record">
+ <strong>${safe(vehicleName(x.arac_id))} • ${safe(x.konum)}</strong>
+ <div class="muted">${safe(x.marka||"")} ${safe(x.model||"")} ${safe(x.ebat||"")}</div>
+ <div class="muted">${safe(x.tarih)} • ${safe(x.durum||"")}</div>
+ <div class="money">${money(x.maliyet)}</div>
+ ${currentMember?.role==="admin"
+ ?`<div class="actions"><button class="danger" onclick="deleteRecord('lastikler','${x.id}')">Sil</button></div>`
+ :""}
+ </div>`).join("")
+ :'<div class="notice">Lastik kaydı yok.</div>');
+}
+
+function renderParts(){
+ $("partsList").innerHTML=
+ "<h3>Parça Geçmişi</h3>"+
+ (parts.length?parts.map(x=>`
+ <div class="record">
+ <strong>${safe(vehicleName(x.arac_id))} • ${safe(x.parca_adi)}</strong>
+ <div class="muted">${safe(x.tarih)} • Adet: ${safe(x.adet||1)}</div>
+ <div class="muted">${safe(x.marka||"")} ${safe(x.parca_no||"")}</div>
+ <div class="money">${money(x.toplam_fiyat)}</div>
+ ${currentMember?.role==="admin"
+ ?`<div class="actions"><button class="danger" onclick="deleteRecord('parcalar','${x.id}')">Sil</button></div>`
+ :""}
+ </div>`).join("")
+ :'<div class="notice">Parça kaydı yok.</div>');
+}
+
+function renderAlerts(){
+ const alerts=[];
+
+ maintenance.forEach(m=>{
+  if(m.sonraki_bakim==null)return;
+
+  const v=vehicleById(m.arac_id);
+  if(!v)return;
+
+  const current=Number(v.guncel_deger)||0;
+  const next=Number(m.sonraki_bakim)||0;
+  const remaining=next-current;
+
+  if(remaining<=0){
+   alerts.push(`
+   <div class="notice overdue">
+   <strong>${safe(v.plaka)}</strong><br>
+   Bakım zamanı geçti.
+   (${Math.abs(remaining)} ${v.takip_birimi==="saat"?"saat":"km"})
+   </div>`);
+  }else if(remaining<=1000){
+   alerts.push(`
+   <div class="notice warning">
+   <strong>${safe(v.plaka)}</strong><br>
+   Bakıma ${remaining} ${v.takip_birimi==="saat"?"saat":"km"} kaldı.
+   </div>`);
+  }
+ });
+
+ $("alerts").innerHTML=
+ alerts.length?alerts.join(""):'<div class="muted">Yaklaşan bakım uyarısı yok.</div>';
+}
 
 async function saveForm(form,table){
+ clearMsg("appMsg");
 
-clearMessage('appMsg');
+ const data=formObj(form);
+ const editId=data.edit_id;
 
-const data=formDataObj(form);
+ delete data.edit_id;
 
+ [
+ "model_yili","guncel_deger","km_saat","sonraki_bakim",
+ "km","takilma_km","adet"
+ ].forEach(k=>{
+  if(data[k]!=null)data[k]=Number(data[k]);
+ });
 
-[
-'model_yili',
-'guncel_deger',
-'km_saat',
-'sonraki_bakim',
-'km',
-'takilma_km',
-'adet'
-].forEach(k=>{
+ ["maliyet","birim_fiyat","toplam_fiyat"].forEach(k=>{
+  if(data[k]!=null)data[k]=Number(data[k]);
+ });
 
-if(data[k]!=null)
-data[k]=Number(data[k]);
+ let result;
 
-});
+ if(editId){
+  result=await db.from(table).update(data).eq("id",editId);
+ }else{
+  result=await db.from(table).insert(data);
+ }
 
+ if(result.error){
+  msg("appMsg","Kayıt yapılamadı: "+result.error.message);
+  return;
+ }
 
-[
-'maliyet',
-'birim_fiyat',
-'toplam_fiyat'
-].forEach(k=>{
+ form.reset();
+ setDates();
 
-if(data[k]!=null)
-data[k]=Number(data[k]);
+ const adet=form.querySelector('[name="adet"]');
+ if(adet)adet.value=1;
 
-});
+ const edit=form.querySelector('[name="edit_id"]');
+ if(edit)edit.value="";
 
+ $("vehicleCancelEdit").classList.add("hidden");
 
-const {error}=await db
-.from(table)
-.insert(data);
+ msg("appMsg","✓ Kayıt merkezi veritabanına kaydedildi.");
 
-
-if(error){
-
-message(
-'appMsg',
-'Kayıt yapılamadı: '+error.message
-);
-
-return;
-
+ await loadAll();
 }
 
+$("vehicleForm").onsubmit=e=>{
+ e.preventDefault();
+ saveForm(e.currentTarget,"araclar");
+};
 
-form.reset();
+$("maintenanceForm").onsubmit=e=>{
+ e.preventDefault();
+ saveForm(e.currentTarget,"bakimlar");
+};
 
-form.querySelectorAll(
-'input[type="date"]'
-).forEach(x=>x.value=today());
+$("tireForm").onsubmit=e=>{
+ e.preventDefault();
+ saveForm(e.currentTarget,"lastikler");
+};
 
+$("partForm").onsubmit=e=>{
+ e.preventDefault();
+ saveForm(e.currentTarget,"parcalar");
+};
 
-const adet=
-form.querySelector('[name="adet"]');
+window.editVehicle=id=>{
+ const v=vehicleById(id);
+ if(!v)return;
 
-if(adet)
-adet.value='1';
+ const f=$("vehicleForm");
 
+ [
+ "plaka","arac_turu","marka","model","model_yili",
+ "takip_birimi","guncel_deger","notlar"
+ ].forEach(k=>{
+  if(f.elements[k])f.elements[k].value=v[k]??"";
+ });
 
-message(
-'appMsg',
-'Kayıt merkezi veritabanına kaydedildi.'
-);
+ f.elements.edit_id.value=v.id;
+ $("vehicleCancelEdit").classList.remove("hidden");
 
-await loadAll();
+ window.scrollTo({top:f.offsetTop-90,behavior:"smooth"});
+};
 
-}
+$("vehicleCancelEdit").onclick=()=>{
+ $("vehicleForm").reset();
+ $("vehicleForm").elements.edit_id.value="";
+ $("vehicleCancelEdit").classList.add("hidden");
+};
 
+window.deleteRecord=async(table,id)=>{
+ if(!confirm("Bu kaydı silmek istediğine emin misin?"))return;
 
+ const {error}=await db.from(table).delete().eq("id",id);
 
-$('vehicleForm').addEventListener('submit',e=>{
+ if(error){
+  msg("appMsg","Silinemedi: "+error.message);
+  return;
+ }
 
-e.preventDefault();
+ msg("appMsg","Kayıt silindi.");
+ await loadAll();
+};
 
-saveForm(
-e.currentTarget,
-'araclar'
-);
+window.historyView=id=>{
+ const v=vehicleById(id);
+ if(!v)return;
 
-});
+ const ms=maintenance.filter(x=>String(x.arac_id)===String(id));
+ const ts=tires.filter(x=>String(x.arac_id)===String(id));
+ const ps=parts.filter(x=>String(x.arac_id)===String(id));
 
+ const text=[
+  "MARHAN FİLO",
+  "",
+  "Araç: "+v.plaka,
+  "Marka/Model: "+[v.marka,v.model].filter(Boolean).join(" "),
+  "Güncel: "+(v.guncel_deger||0)+" "+(v.takip_birimi==="saat"?"saat":"km"),
+  "",
+  "Bakım kayıtları: "+ms.length,
+  "Lastik kayıtları: "+ts.length,
+  "Parça kayıtları: "+ps.length
+ ].join("\n");
 
-$('maintenanceForm').addEventListener('submit',e=>{
+ alert(text);
+};
 
-e.preventDefault();
+$("refreshBtn").onclick=loadAll;
 
-saveForm(
-e.currentTarget,
-'bakimlar'
-);
+$("excelBtn").onclick=()=>{
+ if(typeof XLSX==="undefined"){
+  msg("appMsg","Excel modülü yüklenemedi.");
+  return;
+ }
 
-});
+ const wb=XLSX.utils.book_new();
 
+ const aracData=vehicles.map(v=>({
+  "Plaka / Makine":v.plaka,
+  "Tür":v.arac_turu,
+  "Marka":v.marka,
+  "Model":v.model,
+  "Model Yılı":v.model_yili,
+  "Takip Birimi":v.takip_birimi,
+  "Güncel KM/Saat":v.guncel_deger,
+  "Not":v.notlar
+ }));
 
-$('tireForm').addEventListener('submit',e=>{
+ const bakimData=maintenance.map(x=>({
+  "Araç":vehicleName(x.arac_id),
+  "Tarih":x.tarih,
+  "Bakım Türü":x.bakim_turu,
+  "KM/Saat":x.km_saat,
+  "Yapılan İşlem":x.yapilan_islem,
+  "Sonraki Bakım":x.sonraki_bakim,
+  "Servis/Usta":x.servis_usta,
+  "Maliyet":x.maliyet,
+  "Açıklama":x.aciklama
+ }));
 
-e.preventDefault();
+ const lastikData=tires.map(x=>({
+  "Araç":vehicleName(x.arac_id),
+  "Tarih":x.tarih,
+  "Konum":x.konum,
+  "Marka":x.marka,
+  "Model":x.model,
+  "Ebat":x.ebat,
+  "Seri No":x.seri_no,
+  "Durum":x.durum,
+  "KM":x.km,
+  "Takılma KM":x.takilma_km,
+  "Maliyet":x.maliyet
+ }));
 
-saveForm(
-e.currentTarget,
-'lastikler'
-);
+ const parcaData=parts.map(x=>({
+  "Araç":vehicleName(x.arac_id),
+  "Tarih":x.tarih,
+  "Parça":x.parca_adi,
+  "Marka":x.marka,
+  "Parça No":x.parca_no,
+  "Adet":x.adet,
+  "KM/Saat":x.km_saat,
+  "Birim Fiyat":x.birim_fiyat,
+  "Toplam Fiyat":x.toplam_fiyat
+ }));
 
-});
+ XLSX.utils.book_append_sheet(
+  wb,
+  XLSX.utils.json_to_sheet(aracData.length?aracData:[{"Bilgi":"Kayıt yok"}]),
+  "Araclar"
+ );
 
+ XLSX.utils.book_append_sheet(
+  wb,
+  XLSX.utils.json_to_sheet(bakimData.length?bakimData:[{"Bilgi":"Kayıt yok"}]),
+  "Bakimlar"
+ );
 
-$('partForm').addEventListener('submit',e=>{
+ XLSX.utils.book_append_sheet(
+  wb,
+  XLSX.utils.json_to_sheet(lastikData.length?lastikData:[{"Bilgi":"Kayıt yok"}]),
+  "Lastikler"
+ );
 
-e.preventDefault();
+ XLSX.utils.book_append_sheet(
+  wb,
+  XLSX.utils.json_to_sheet(parcaData.length?parcaData:[{"Bilgi":"Kayıt yok"}]),
+  "Parcalar"
+ );
 
-saveForm(
-e.currentTarget,
-'parcalar'
-);
-
-});
-
+ XLSX.writeFile(wb,"Marhan_Filo_"+today()+".xlsx");
+};
 
 authState();
-
-})();
-
 </script>
 
 </body>
