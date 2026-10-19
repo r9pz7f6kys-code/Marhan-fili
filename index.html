@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0c0e11">
 <title>Marhan Filo</title>
 
 <style>
@@ -14,14 +15,19 @@ body{
  color:#fff
 }
 header{
- padding:22px;
+ padding:20px;
  background:#15191e;
- border-bottom:1px solid #2c3239
+ border-bottom:1px solid #2c3239;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:12px
 }
 .logo{font-size:25px;font-weight:900}
 .logo span{color:#f2b632}
-.sub{color:#9da6b0;margin-top:5px}
-main{padding:18px;max-width:700px;margin:auto}
+.sub,.small{color:#aeb6c0}
+.sub{margin-top:5px;font-size:13px}
+main{padding:16px;max-width:760px;margin:auto}
 .card{
  background:#171b20;
  border:1px solid #2b323a;
@@ -29,7 +35,7 @@ main{padding:18px;max-width:700px;margin:auto}
  padding:18px;
  margin-bottom:14px
 }
-h2{margin-top:0}
+h2{margin:0 0 12px}
 .grid{
  display:grid;
  grid-template-columns:1fr 1fr;
@@ -38,35 +44,14 @@ h2{margin-top:0}
 .box{
  background:#222830;
  border-radius:14px;
- padding:15px;
+ padding:14px;
  text-align:center
 }
 .num{font-size:27px;font-weight:900}
-.small{font-size:13px;color:#aeb6c0}
 
-summary{
- display:block;
- background:#f2b632;
- color:#111;
- padding:15px;
- margin-top:10px;
- border-radius:13px;
- text-align:center;
- font-size:16px;
- font-weight:800;
- cursor:pointer
-}
-summary::-webkit-details-marker{display:none}
-
-.form{
- margin-top:12px;
- padding:14px;
- background:#222830;
- border-radius:14px
-}
-input,select{
+input,select,textarea{
  width:100%;
- padding:14px;
+ padding:13px;
  margin:6px 0;
  border:1px solid #3a424c;
  border-radius:11px;
@@ -74,95 +59,1060 @@ input,select{
  color:white;
  font-size:16px
 }
-.save{
- width:100%;
- padding:14px;
- margin-top:8px;
+textarea{min-height:72px}
+
+button{
  border:0;
- border-radius:11px;
+ border-radius:12px;
+ padding:13px;
  background:#f2b632;
  color:#111;
- font-size:16px;
+ font-size:15px;
  font-weight:800
 }
+.primary{width:100%;margin-top:8px}
+.secondary{background:#29313a;color:white}
+.hidden{display:none!important}
+
+.tabs{
+ display:flex;
+ gap:7px;
+ overflow:auto;
+ margin-bottom:14px
+}
+.tabs button{
+ white-space:nowrap;
+ flex:1
+}
+.tabs button.active{
+ background:#f2b632;
+ color:#111
+}
+
+.record{
+ background:#222830;
+ border-radius:13px;
+ padding:13px;
+ margin-top:9px
+}
+.row{
+ display:flex;
+ gap:8px;
+ align-items:center;
+ justify-content:space-between
+}
+.notice{
+ padding:12px;
+ border-radius:12px;
+ background:#242b32;
+ color:#dce2e8;
+ margin:10px 0;
+ font-size:14px
+}
+.muted{
+ font-size:13px;
+ color:#aeb6c0
+}
+.auth{
+ max-width:430px;
+ margin:35px auto
+}
+.pill{
+ font-size:12px;
+ color:#111;
+ background:#f2b632;
+ border-radius:20px;
+ padding:5px 8px
+}
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
 
 <header>
- <div class="logo"><span>MARHAN</span> FİLO</div>
- <div class="sub">Araç • Makine • Bakım Yönetimi</div>
+ <div>
+  <div class="logo"><span>MARHAN</span> FİLO</div>
+  <div class="sub">Araç • Makine • Bakım Yönetimi</div>
+ </div>
+ <button id="logout" class="secondary hidden">Çıkış</button>
 </header>
 
 <main>
 
+<section id="authView" class="card auth">
+ <h2>Marhan Filo Giriş</h2>
+
+ <div class="muted">
+ Kayıtlar merkezi sistemde tutulur ve yetkili telefonlardan görüntülenebilir.
+ </div>
+
+ <form id="authForm">
+  <input
+   id="email"
+   type="email"
+   autocomplete="email"
+   required
+   placeholder="E-posta adresi">
+
+  <input
+   id="password"
+   type="password"
+   autocomplete="current-password"
+   minlength="8"
+   required
+   placeholder="Şifre">
+
+  <button class="primary" type="submit" id="loginBtn">
+   Giriş Yap
+  </button>
+
+  <button
+   class="primary secondary"
+   type="button"
+   id="signupBtn">
+   İlk Hesabımı Oluştur
+  </button>
+ </form>
+
+ <div id="authMsg" class="notice hidden"></div>
+
+ <p class="muted">
+ Yalnızca Marhan Filo tarafından yetkilendirilen e-posta adresleri filo verilerine erişebilir.
+ </p>
+</section>
+
+
+<section id="appView" class="hidden">
+
 <div class="card">
- <h2>Filo Özeti</h2>
+
+ <div class="row">
+  <div>
+   <h2>Filo Özeti</h2>
+   <div id="welcome" class="muted"></div>
+  </div>
+  <span class="pill">MERKEZİ KAYIT</span>
+ </div>
+
  <div class="grid">
-  <div class="box"><div class="num">15</div><div class="small">Kamyon</div></div>
-  <div class="box"><div class="num">5</div><div class="small">Ekskavatör</div></div>
-  <div class="box"><div class="num">1</div><div class="small">Silindir</div></div>
-  <div class="box"><div class="num">1</div><div class="small">CAT 963</div></div>
+
+  <div class="box">
+   <div class="num" id="truckCount">0</div>
+   <div class="small">Kamyon</div>
+  </div>
+
+  <div class="box">
+   <div class="num" id="excavatorCount">0</div>
+   <div class="small">Ekskavatör</div>
+  </div>
+
+  <div class="box">
+   <div class="num" id="otherCount">0</div>
+   <div class="small">Diğer</div>
+  </div>
+
+  <div class="box">
+   <div class="num" id="maintenanceCount">0</div>
+   <div class="small">Bakım</div>
+  </div>
+
  </div>
 </div>
 
-<div class="card">
- <h2>Filo Yönetimi</h2>
 
- <details>
-  <summary>Araç / Makine Ekle</summary>
-  <div class="form">
-   <input placeholder="Plaka / Makine No">
-   <select>
-    <option>Kamyon</option>
-    <option>Ekskavatör</option>
-    <option>Silindir</option>
-    <option>CAT 963</option>
-    <option>Diğer</option>
-   </select>
-   <input placeholder="Marka / Model">
-   <input type="number" placeholder="KM / Çalışma Saati">
-   <button class="save">Kaydet</button>
-  </div>
- </details>
+<div class="tabs" id="tabs">
 
- <details>
-  <summary>Bakım Kaydı Ekle</summary>
-  <div class="form">
-   <input placeholder="Plaka / Makine No">
-   <input placeholder="Bakım Türü">
-   <input type="date">
-   <input type="number" placeholder="KM / Çalışma Saati">
-  </div>
- </details>
+ <button data-tab="vehicles" class="active">
+ Araçlar
+ </button>
 
- <details>
-  <summary>Lastik Takibi</summary>
-  <div class="form">
-   <input placeholder="Plaka / Makine No">
-   <input placeholder="Lastik marka / ölçü">
-   <input type="date">
-  </div>
- </details>
+ <button data-tab="maintenance">
+ Bakımlar
+ </button>
 
- <details>
-  <summary>Değişen Parçalar</summary>
-  <div class="form">
-   <input placeholder="Plaka / Makine No">
-   <input placeholder="Değişen Parça">
-   <input type="date">
-  </div>
- </details>
+ <button data-tab="tires">
+ Lastikler
+ </button>
+
+ <button data-tab="parts">
+ Parçalar
+ </button>
 
 </div>
 
-<div class="card">
- <h2>Bakım Uyarıları</h2>
- <div class="small">Yaklaşan ve geciken bakımlar burada gösterilecek.</div>
-</div>
+
+<section id="vehiclesPanel" class="card panel">
+
+<h2>Araç / Makine Ekle</h2>
+
+<form id="vehicleForm">
+
+<input
+ name="plaka"
+ required
+ placeholder="Plaka / Makine No">
+
+<select name="arac_turu">
+ <option>Kamyon</option>
+ <option>Ekskavatör</option>
+ <option>Silindir</option>
+ <option>CAT 963</option>
+ <option>Diğer</option>
+</select>
+
+<input name="marka" placeholder="Marka">
+
+<input name="model" placeholder="Model">
+
+<input
+ name="model_yili"
+ type="number"
+ placeholder="Model yılı">
+
+<select name="takip_birimi">
+ <option value="km">Kilometre</option>
+ <option value="saat">Çalışma Saati</option>
+</select>
+
+<input
+ name="guncel_deger"
+ type="number"
+ min="0"
+ value="0"
+ placeholder="Güncel KM / çalışma saati">
+
+<textarea
+ name="notlar"
+ placeholder="Araç hakkında not"></textarea>
+
+<button class="primary" type="submit">
+ Aracı Kaydet
+</button>
+
+</form>
+
+<div id="vehiclesList"></div>
+
+</section>
+
+
+<section id="maintenancePanel" class="card panel hidden">
+
+<h2>Bakım Kaydı Ekle</h2>
+
+<form id="maintenanceForm">
+
+<select
+ name="arac_id"
+ class="vehicleSelect"
+ required>
+</select>
+
+<input name="tarih" type="date" required>
+
+<input
+ name="bakim_turu"
+ required
+ placeholder="Bakım türü">
+
+<input
+ name="km_saat"
+ type="number"
+ placeholder="KM / çalışma saati">
+
+<input
+ name="yapilan_islem"
+ placeholder="Yapılan işlem">
+
+<input
+ name="sonraki_bakim"
+ type="number"
+ placeholder="Sonraki bakım KM / saat">
+
+<input
+ name="servis_usta"
+ placeholder="Servis / usta">
+
+<input
+ name="maliyet"
+ type="number"
+ step="0.01"
+ placeholder="Maliyet ₺">
+
+<textarea
+ name="aciklama"
+ placeholder="Açıklama"></textarea>
+
+<button class="primary" type="submit">
+ Bakımı Kaydet
+</button>
+
+</form>
+
+<div id="maintenanceList"></div>
+
+</section>
+
+
+<section id="tiresPanel" class="card panel hidden">
+
+<h2>Lastik Takibi</h2>
+
+<form id="tireForm">
+
+<select
+ name="arac_id"
+ class="vehicleSelect"
+ required>
+</select>
+
+<input name="tarih" type="date" required>
+
+<input
+ name="konum"
+ required
+ placeholder="Konum - Ön sağ vb.">
+
+<input name="marka" placeholder="Lastik markası">
+
+<input name="model" placeholder="Model">
+
+<input name="ebat" placeholder="Lastik ölçüsü">
+
+<input name="seri_no" placeholder="Seri numarası">
+
+<select name="durum">
+ <option>Yeni</option>
+ <option>Kullanımda</option>
+ <option>Çıkarıldı</option>
+ <option>Hurda</option>
+</select>
+
+<input
+ name="km"
+ type="number"
+ placeholder="Araç KM">
+
+<input
+ name="takilma_km"
+ type="number"
+ placeholder="Takıldığı KM">
+
+<input
+ name="maliyet"
+ type="number"
+ step="0.01"
+ placeholder="Maliyet ₺">
+
+<textarea
+ name="aciklama"
+ placeholder="Açıklama"></textarea>
+
+<button class="primary" type="submit">
+ Lastiği Kaydet
+</button>
+
+</form>
+
+<div id="tiresList"></div>
+
+</section>
+
+
+<section id="partsPanel" class="card panel hidden">
+
+<h2>Değişen Parça Ekle</h2>
+
+<form id="partForm">
+
+<select
+ name="arac_id"
+ class="vehicleSelect"
+ required>
+</select>
+
+<input name="tarih" type="date" required>
+
+<input
+ name="parca_adi"
+ required
+ placeholder="Değişen parça">
+
+<input name="marka" placeholder="Parça markası">
+
+<input name="parca_no" placeholder="Parça numarası">
+
+<input
+ name="adet"
+ type="number"
+ min="1"
+ value="1"
+ placeholder="Adet">
+
+<input
+ name="km_saat"
+ type="number"
+ placeholder="KM / çalışma saati">
+
+<input
+ name="birim_fiyat"
+ type="number"
+ step="0.01"
+ placeholder="Birim fiyat ₺">
+
+<input
+ name="toplam_fiyat"
+ type="number"
+ step="0.01"
+ placeholder="Toplam fiyat ₺">
+
+<textarea
+ name="aciklama"
+ placeholder="Açıklama"></textarea>
+
+<button class="primary" type="submit">
+ Parçayı Kaydet
+</button>
+
+</form>
+
+<div id="partsList"></div>
+
+</section>
+
+<div id="appMsg" class="notice hidden"></div>
+
+</section>
 
 </main>
 
-</body>
-</html>
+
+<script>
+
+const SUPABASE_URL =
+"https://qccpcepsgfepuyltamae.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_mKOALiZdR_RpkMt028nbIA_vOv0epVz";
+
+const db =
+supabase.createClient(
+ SUPABASE_URL,
+ SUPABASE_KEY
+);
+
+let vehicles=[];
+let maintenance=[];
+let tires=[];
+let parts=[];
+
+const el=id=>document.getElementById(id);
+
+function today(){
+ return new Date().toISOString().slice(0,10);
+}
+
+document
+.querySelectorAll('input[type="date"]')
+.forEach(x=>x.value=today());
+
+
+function message(id,text){
+
+ const box=el(id);
+
+ box.textContent=text;
+
+ box.classList.remove("hidden");
+
+}
+
+
+function hideMessage(id){
+
+ el(id).classList.add("hidden");
+
+}
+
+
+function safe(value){
+
+ return String(value ?? "")
+ .replace(
+  /[&<>"']/g,
+  char=>({
+   "&":"&amp;",
+   "<":"&lt;",
+   ">":"&gt;",
+   '"':"&quot;",
+   "'":"&#39;"
+  }[char])
+ );
+
+}
+
+
+function getFormData(form){
+
+ const data =
+ Object.fromEntries(
+  new FormData(form).entries()
+ );
+
+ Object.keys(data).forEach(key=>{
+
+  if(data[key]==="")
+   data[key]=null;
+
+ });
+
+ return data;
+
+}
+
+
+async function checkLogin(){
+
+ const {
+  data:{session}
+ }=await db.auth.getSession();
+
+
+ if(!session){
+
+  el("authView").classList.remove("hidden");
+
+  el("appView").classList.add("hidden");
+
+  el("logout").classList.add("hidden");
+
+  return;
+
+ }
+
+
+ const {
+  data:member,
+  error
+ }=await db
+ .from("company_members")
+ .select("role,email")
+ .eq("user_id",session.user.id)
+ .maybeSingle();
+
+
+ if(error || !member){
+
+  await db.auth.signOut();
+
+  message(
+   "authMsg",
+   "Bu e-posta Marhan Filo için yetkilendirilmemiş."
+  );
+
+  return;
+
+ }
+
+
+ el("authView").classList.add("hidden");
+
+ el("appView").classList.remove("hidden");
+
+ el("logout").classList.remove("hidden");
+
+
+ el("welcome").textContent =
+ session.user.email +
+ " • " +
+ (member.role==="admin"
+ ? "Yönetici"
+ : "Kullanıcı");
+
+
+ await loadData();
+
+}
+
+
+
+el("authForm")
+.addEventListener(
+"submit",
+async event=>{
+
+ event.preventDefault();
+
+ hideMessage("authMsg");
+
+ const email =
+ el("email").value.trim();
+
+ const password =
+ el("password").value;
+
+
+ const {error} =
+ await db.auth.signInWithPassword({
+  email,
+  password
+ });
+
+
+ if(error){
+
+  message(
+   "authMsg",
+   "Giriş yapılamadı: " +
+   error.message
+  );
+
+  return;
+
+ }
+
+
+ await checkLogin();
+
+});
+
+
+
+el("signupBtn")
+.addEventListener(
+"click",
+async()=>{
+
+ const email =
+ el("email").value.trim();
+
+ const password =
+ el("password").value;
+
+
+ if(!email || password.length<8){
+
+  message(
+   "authMsg",
+   "E-posta adresini gir ve en az 8 karakterli bir şifre oluştur."
+  );
+
+  return;
+
+ }
+
+
+ const {data,error} =
+ await db.auth.signUp({
+  email,
+  password
+ });
+
+
+ if(error){
+
+  message(
+   "authMsg",
+   "Hesap oluşturulamadı: " +
+   error.message
+  );
+
+  return;
+
+ }
+
+
+ if(data.session){
+
+  await checkLogin();
+
+ }
+ else{
+
+  message(
+   "authMsg",
+   "Hesap oluşturuldu. E-posta doğrulama mesajı geldiyse bağlantıya bas, ardından giriş yap."
+  );
+
+ }
+
+});
+
+
+
+el("logout")
+.addEventListener(
+"click",
+async()=>{
+
+ await db.auth.signOut();
+
+ location.reload();
+
+});
+
+
+
+document
+.querySelectorAll("#tabs button")
+.forEach(button=>{
+
+ button.addEventListener(
+ "click",
+ ()=>{
+
+  document
+  .querySelectorAll("#tabs button")
+  .forEach(
+   b=>b.classList.toggle(
+    "active",
+    b===button
+   )
+  );
+
+
+  document
+  .querySelectorAll(".panel")
+  .forEach(
+   panel=>panel.classList.add("hidden")
+  );
+
+
+  el(
+   button.dataset.tab+"Panel"
+  ).classList.remove("hidden");
+
+ });
+
+});
+
+
+
+async function loadData(){
+
+ const results =
+ await Promise.all([
+
+  db
+  .from("araclar")
+  .select("*")
+  .order("plaka"),
+
+  db
+  .from("bakimlar")
+  .select("*")
+  .order("tarih",{ascending:false}),
+
+  db
+  .from("lastikler")
+  .select("*")
+  .order("tarih",{ascending:false}),
+
+  db
+  .from("parcalar")
+  .select("*")
+  .order("tarih",{ascending:false})
+
+ ]);
+
+
+ const failed =
+ results.find(x=>x.error);
+
+
+ if(failed){
+
+  message(
+   "appMsg",
+   "Veriler yüklenemedi: " +
+   failed.error.message
+  );
+
+  return;
+
+ }
+
+
+ vehicles=results[0].data || [];
+ maintenance=results[1].data || [];
+ tires=results[2].data || [];
+ parts=results[3].data || [];
+
+
+ render();
+
+}
+
+
+
+function vehicleName(id){
+
+ const vehicle =
+ vehicles.find(
+  v=>String(v.id)===String(id)
+ );
+
+ return vehicle
+ ? vehicle.plaka
+ : "Araç #"+id;
+
+}
+
+
+
+function render(){
+
+ el("truckCount").textContent =
+ vehicles.filter(
+  v=>v.arac_turu==="Kamyon"
+ ).length;
+
+
+ el("excavatorCount").textContent =
+ vehicles.filter(
+  v=>v.arac_turu==="Ekskavatör"
+ ).length;
+
+
+ el("otherCount").textContent =
+ vehicles.filter(
+  v=>![
+   "Kamyon",
+   "Ekskavatör"
+  ].includes(v.arac_turu)
+ ).length;
+
+
+ el("maintenanceCount").textContent =
+ maintenance.length;
+
+
+
+ document
+ .querySelectorAll(".vehicleSelect")
+ .forEach(select=>{
+
+  select.innerHTML =
+  '<option value="">Araç seç</option>' +
+
+  vehicles.map(
+   v=>
+   '<option value="'+v.id+'">'+
+   safe(v.plaka)+
+   " — "+
+   safe(v.arac_turu)+
+   "</option>"
+  ).join("");
+
+ });
+
+
+
+ el("vehiclesList").innerHTML =
+
+ '<h2 style="margin-top:22px">Kayıtlı Araçlar</h2>' +
+
+ (
+ vehicles.length
+ ?
+ vehicles.map(v=>
+
+ '<div class="record">'+
+ '<strong>'+safe(v.plaka)+'</strong>'+
+ '<div class="muted">'+
+ safe(v.arac_turu)+
+ ' • '+
+ safe(v.marka || "")+
+ ' '+
+ safe(v.model || "")+
+ '</div>'+
+ '<div class="muted">'+
+ safe(v.guncel_deger || 0)+
+ ' '+
+ (v.takip_birimi==="saat"
+ ? "çalışma saati"
+ : "km")+
+ '</div>'+
+ '</div>'
+
+ ).join("")
+
+ :
+
+ '<div class="notice">'+
+ 'Henüz araç kaydı yok.'+
+ '</div>'
+
+ );
+
+
+
+ el("maintenanceList").innerHTML =
+
+ '<h2 style="margin-top:22px">Bakım Geçmişi</h2>' +
+
+ (
+ maintenance.length
+ ?
+ maintenance.map(m=>
+
+ '<div class="record">'+
+ '<strong>'+
+ safe(vehicleName(m.arac_id))+
+ ' • '+
+ safe(m.bakim_turu)+
+ '</strong>'+
+ '<div class="muted">'+
+ safe(m.tarih)+
+ ' • '+
+ safe(m.km_saat || "-")+
+ ' KM/Saat'+
+ '</div>'+
+ '<div class="muted">'+
+ safe(m.yapilan_islem || "")+
+ '</div>'+
+ '</div>'
+
+ ).join("")
+
+ :
+
+ '<div class="notice">'+
+ 'Henüz bakım kaydı yok.'+
+ '</div>'
+
+ );
+
+
+
+ el("tiresList").innerHTML =
+
+ '<h2 style="margin-top:22px">Lastik Geçmişi</h2>' +
+
+ (
+ tires.length
+ ?
+ tires.map(t=>
+
+ '<div class="record">'+
+ '<strong>'+
+ safe(vehicleName(t.arac_id))+
+ ' • '+
+ safe(t.konum)+
+ '</strong>'+
+ '<div class="muted">'+
+ safe(t.marka || "")+
+ ' '+
+ safe(t.model || "")+
+ ' • '+
+ safe(t.ebat || "")+
+ '</div>'+
+ '<div class="muted">'+
+ safe(t.tarih)+
+ ' • '+
+ safe(t.durum || "")+
+ '</div>'+
+ '</div>'
+
+ ).join("")
+
+ :
+
+ '<div class="notice">'+
+ 'Henüz lastik kaydı yok.'+
+ '</div>'
+
+ );
+
+
+
+ el("partsList").innerHTML =
+
+ '<h2 style="margin-top:22px">Parça Geçmişi</h2>' +
+
+ (
+ parts.length
+ ?
+ parts.map(p=>
+
+ '<div class="record">'+
+ '<strong>'+
+ safe(vehicleName(p.arac_id))+
+ ' • '+
+ safe(p.parca_adi)+
+ '</strong>'+
+ '<div class="muted">'+
+ safe(p.tarih)+
+ ' • Adet: '+
+ safe(p.adet || 1)+
+ '</div>'+
+ '</div>'
+
+ ).join("")
+
+ :
+
+ '<div class="notice">'+
+ 'Henüz parça kaydı yok.'+
+ '</div>'
+
+ );
+
+}
+
+
+
+async function saveForm(
+ form,
+ table
+){
+
+ hideMessage("appMsg");
+
+ const data =
+ getFormData(form);
+
+
+ [
+ "model_yili",
+ "guncel_deger",
+ "km_saat",
+ "sonraki_bakim",
+ "km",
+ "takilma_km",
+ "adet"
+ ]
+ .forEach(key=>{
+
+  if(data[key]!=null)
+   data[key]=Number(data[key]);
+
+ });
+
+
+ [
+ "maliyet",
+ "birim_fiyat",
+ "toplam_fiyat"
+ ]
+ .forEach(key=>{
+
+  if(data[key]!=null)
+   data[key]=Number(data[key]);
+
+ });
+
+
+ const {error} =
+ await db
+ .from(table)
+ .insert(data);
+
+
+ if(error){
+
+  message(
+   "appMsg",
+   "K
