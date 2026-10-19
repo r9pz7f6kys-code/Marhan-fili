@@ -8,122 +8,36 @@
 
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;
- font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
- background:#0c0e11;
- color:#fff
-}
-header{
- padding:20px;
- background:#15191e;
- border-bottom:1px solid #2c3239;
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:12px
-}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#0c0e11;color:#fff}
+header{padding:20px;background:#15191e;border-bottom:1px solid #2c3239;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .logo{font-size:25px;font-weight:900}
 .logo span{color:#f2b632}
 .sub,.small{color:#aeb6c0}
 .sub{margin-top:5px;font-size:13px}
 main{padding:16px;max-width:760px;margin:auto}
-.card{
- background:#171b20;
- border:1px solid #2b323a;
- border-radius:18px;
- padding:18px;
- margin-bottom:14px
-}
-h2{margin:0 0 12px}
-.grid{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:10px
-}
-.box{
- background:#222830;
- border-radius:14px;
- padding:14px;
- text-align:center
-}
+.card{background:#171b20;border:1px solid #2b323a;border-radius:18px;padding:18px;margin-bottom:14px}
+h2{margin:0 0 12px;font-size:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.box{background:#222830;border-radius:14px;padding:14px;text-align:center}
 .num{font-size:27px;font-weight:900}
-
-input,select,textarea{
- width:100%;
- padding:13px;
- margin:6px 0;
- border:1px solid #3a424c;
- border-radius:11px;
- background:#0c0e11;
- color:white;
- font-size:16px
-}
+input,select,textarea{box-sizing:border-box;width:100%;padding:13px;margin:6px 0;border:1px solid #3a424c;border-radius:11px;background:#0c0e11;color:white;font-size:16px}
 textarea{min-height:72px}
-
-button{
- border:0;
- border-radius:12px;
- padding:13px;
- background:#f2b632;
- color:#111;
- font-size:15px;
- font-weight:800
-}
+button{border:0;border-radius:12px;padding:13px;background:#f2b632;color:#111;font-size:15px;font-weight:800;cursor:pointer}
 .primary{width:100%;margin-top:8px}
-.secondary{background:#29313a;color:white}
+.secondary{background:#29313a;color:#fff}
 .hidden{display:none!important}
-
-.tabs{
- display:flex;
- gap:7px;
- overflow:auto;
- margin-bottom:14px
-}
-.tabs button{
- white-space:nowrap;
- flex:1
-}
-.tabs button.active{
- background:#f2b632;
- color:#111
-}
-
-.record{
- background:#222830;
- border-radius:13px;
- padding:13px;
- margin-top:9px
-}
-.row{
- display:flex;
- gap:8px;
- align-items:center;
- justify-content:space-between
-}
-.notice{
- padding:12px;
- border-radius:12px;
- background:#242b32;
- color:#dce2e8;
- margin:10px 0;
- font-size:14px
-}
-.muted{
- font-size:13px;
- color:#aeb6c0
-}
-.auth{
- max-width:430px;
- margin:35px auto
-}
-.pill{
- font-size:12px;
- color:#111;
- background:#f2b632;
- border-radius:20px;
- padding:5px 8px
-}
+.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:14px}
+.tabs button{white-space:nowrap;flex:1}
+.tabs button.active{background:#f2b632;color:#111}
+.record{background:#222830;border-radius:13px;padding:13px;margin-top:9px;overflow-wrap:anywhere}
+.record strong{font-size:16px}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.notice{padding:12px;border-radius:12px;background:#242b32;color:#dce2e8;margin:10px 0;font-size:14px}
+.muted{font-size:13px;color:#aeb6c0}
+.auth{max-width:430px;margin:35px auto}
+.auth h2{font-size:24px}
+.pill{font-size:12px;color:#111;background:#f2b632;border-radius:20px;padding:5px 8px}
+@media(min-width:650px){main{padding:22px}.grid.stats{grid-template-columns:repeat(4,1fr)}}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -132,55 +46,39 @@ button{
 <body>
 
 <header>
- <div>
-  <div class="logo"><span>MARHAN</span> FİLO</div>
-  <div class="sub">Araç • Makine • Bakım Yönetimi</div>
- </div>
- <button id="logout" class="secondary hidden">Çıkış</button>
+<div>
+<div class="logo"><span>MARHAN</span> FİLO</div>
+<div class="sub">Araç • Makine • Bakım Yönetimi</div>
+</div>
+<button id="logout" class="secondary hidden">Çıkış</button>
 </header>
 
 <main>
 
 <section id="authView" class="card auth">
- <h2>Marhan Filo Giriş</h2>
+<h2>Marhan Filo Giriş</h2>
 
- <div class="muted">
- Kayıtlar merkezi sistemde tutulur ve yetkili telefonlardan görüntülenebilir.
- </div>
+<div class="muted">
+Kayıtlar merkezi sistemde tutulur ve yetkili telefonlardan görüntülenebilir.
+</div>
 
- <form id="authForm">
-  <input
-   id="email"
-   type="email"
-   autocomplete="email"
-   required
-   placeholder="E-posta adresi">
+<form id="authForm">
+<input id="email" type="email" autocomplete="email" required placeholder="E-posta adresi">
 
-  <input
-   id="password"
-   type="password"
-   autocomplete="current-password"
-   minlength="8"
-   required
-   placeholder="Şifre">
+<input id="password" type="password" autocomplete="current-password" minlength="8" required placeholder="Şifre">
 
-  <button class="primary" type="submit" id="loginBtn">
-   Giriş Yap
-  </button>
+<button class="primary" type="submit" id="loginBtn">Giriş Yap</button>
 
-  <button
-   class="primary secondary"
-   type="button"
-   id="signupBtn">
-   İlk Hesabımı Oluştur
-  </button>
- </form>
+<button class="primary secondary" type="button" id="signupBtn">
+İlk Hesabımı Oluştur
+</button>
+</form>
 
- <div id="authMsg" class="notice hidden"></div>
+<div id="authMsg" class="notice hidden"></div>
 
- <p class="muted">
- Yalnızca Marhan Filo tarafından yetkilendirilen e-posta adresleri filo verilerine erişebilir.
- </p>
+<p class="muted">
+Yalnızca Marhan Filo tarafından yetkilendirilen e-posta adresleri filo verilerine erişebilir.
+</p>
 </section>
 
 
@@ -188,58 +86,46 @@ button{
 
 <div class="card">
 
- <div class="row">
-  <div>
-   <h2>Filo Özeti</h2>
-   <div id="welcome" class="muted"></div>
-  </div>
-  <span class="pill">MERKEZİ KAYIT</span>
- </div>
+<div class="row">
+<div>
+<h2>Filo Özeti</h2>
+<div id="welcome" class="muted"></div>
+</div>
 
- <div class="grid">
+<span class="pill">MERKEZİ KAYIT</span>
+</div>
 
-  <div class="box">
-   <div class="num" id="truckCount">0</div>
-   <div class="small">Kamyon</div>
-  </div>
+<div class="grid stats">
 
-  <div class="box">
-   <div class="num" id="excavatorCount">0</div>
-   <div class="small">Ekskavatör</div>
-  </div>
+<div class="box">
+<div class="num" id="truckCount">0</div>
+<div class="small">Kamyon</div>
+</div>
 
-  <div class="box">
-   <div class="num" id="otherCount">0</div>
-   <div class="small">Diğer</div>
-  </div>
+<div class="box">
+<div class="num" id="excavatorCount">0</div>
+<div class="small">Ekskavatör</div>
+</div>
 
-  <div class="box">
-   <div class="num" id="maintenanceCount">0</div>
-   <div class="small">Bakım</div>
-  </div>
+<div class="box">
+<div class="num" id="otherCount">0</div>
+<div class="small">Diğer</div>
+</div>
 
- </div>
+<div class="box">
+<div class="num" id="maintenanceCount">0</div>
+<div class="small">Bakım</div>
+</div>
+
+</div>
 </div>
 
 
 <div class="tabs" id="tabs">
-
- <button data-tab="vehicles" class="active">
- Araçlar
- </button>
-
- <button data-tab="maintenance">
- Bakımlar
- </button>
-
- <button data-tab="tires">
- Lastikler
- </button>
-
- <button data-tab="parts">
- Parçalar
- </button>
-
+<button data-tab="vehicles" class="active">Araçlar</button>
+<button data-tab="maintenance">Bakımlar</button>
+<button data-tab="tires">Lastikler</button>
+<button data-tab="parts">Parçalar</button>
 </div>
 
 
@@ -249,47 +135,37 @@ button{
 
 <form id="vehicleForm">
 
-<input
- name="plaka"
- required
- placeholder="Plaka / Makine No">
+<input name="plaka" required placeholder="Plaka / Makine No">
 
 <select name="arac_turu">
- <option>Kamyon</option>
- <option>Ekskavatör</option>
- <option>Silindir</option>
- <option>CAT 963</option>
- <option>Diğer</option>
+<option>Kamyon</option>
+<option>Ekskavatör</option>
+<option>Silindir</option>
+<option>CAT 963</option>
+<option>Diğer</option>
 </select>
 
+<div class="grid">
 <input name="marka" placeholder="Marka">
-
 <input name="model" placeholder="Model">
+</div>
 
-<input
- name="model_yili"
- type="number"
- placeholder="Model yılı">
+<div class="grid">
+
+<input name="model_yili" type="number" min="1950" max="2100" placeholder="Model yılı">
 
 <select name="takip_birimi">
- <option value="km">Kilometre</option>
- <option value="saat">Çalışma Saati</option>
+<option value="km">Kilometre</option>
+<option value="saat">Çalışma saati</option>
 </select>
 
-<input
- name="guncel_deger"
- type="number"
- min="0"
- value="0"
- placeholder="Güncel KM / çalışma saati">
+</div>
 
-<textarea
- name="notlar"
- placeholder="Araç hakkında not"></textarea>
+<input name="guncel_deger" type="number" min="0" placeholder="Güncel KM / saat" value="0">
 
-<button class="primary" type="submit">
- Aracı Kaydet
-</button>
+<textarea name="notlar" placeholder="Notlar (isteğe bağlı)"></textarea>
+
+<button class="primary" type="submit">Aracı Kaydet</button>
 
 </form>
 
@@ -304,50 +180,25 @@ button{
 
 <form id="maintenanceForm">
 
-<select
- name="arac_id"
- class="vehicleSelect"
- required>
-</select>
+<select name="arac_id" class="vehicleSelect" required></select>
 
 <input name="tarih" type="date" required>
 
-<input
- name="bakim_turu"
- required
- placeholder="Bakım türü">
+<input name="bakim_turu" required placeholder="Bakım türü (yağ, filtre vb.)">
 
-<input
- name="km_saat"
- type="number"
- placeholder="KM / çalışma saati">
+<input name="km_saat" type="number" min="0" placeholder="KM / çalışma saati">
 
-<input
- name="yapilan_islem"
- placeholder="Yapılan işlem">
+<input name="yapilan_islem" placeholder="Yapılan işlem">
 
-<input
- name="sonraki_bakim"
- type="number"
- placeholder="Sonraki bakım KM / saat">
+<input name="sonraki_bakim" type="number" min="0" placeholder="Sonraki bakım KM / saat">
 
-<input
- name="servis_usta"
- placeholder="Servis / usta">
+<input name="servis_usta" placeholder="Servis / usta">
 
-<input
- name="maliyet"
- type="number"
- step="0.01"
- placeholder="Maliyet ₺">
+<input name="maliyet" type="number" min="0" step="0.01" placeholder="Maliyet (₺)">
 
-<textarea
- name="aciklama"
- placeholder="Açıklama"></textarea>
+<textarea name="aciklama" placeholder="Açıklama"></textarea>
 
-<button class="primary" type="submit">
- Bakımı Kaydet
-</button>
+<button class="primary" type="submit">Bakımı Kaydet</button>
 
 </form>
 
@@ -362,57 +213,36 @@ button{
 
 <form id="tireForm">
 
-<select
- name="arac_id"
- class="vehicleSelect"
- required>
-</select>
+<select name="arac_id" class="vehicleSelect" required></select>
 
 <input name="tarih" type="date" required>
 
-<input
- name="konum"
- required
- placeholder="Konum - Ön sağ vb.">
+<input name="konum" required placeholder="Konum (örn. ön sağ)">
 
-<input name="marka" placeholder="Lastik markası">
+<input name="marka" placeholder="Marka">
 
 <input name="model" placeholder="Model">
 
 <input name="ebat" placeholder="Lastik ölçüsü">
 
-<input name="seri_no" placeholder="Seri numarası">
+<input name="seri_no" placeholder="Seri no">
 
 <select name="durum">
- <option>Yeni</option>
- <option>Kullanımda</option>
- <option>Çıkarıldı</option>
- <option>Hurda</option>
+<option>Yeni</option>
+<option>Kullanımda</option>
+<option>Çıkarıldı</option>
+<option>Hurda</option>
 </select>
 
-<input
- name="km"
- type="number"
- placeholder="Araç KM">
+<input name="km" type="number" min="0" placeholder="Araç KM">
 
-<input
- name="takilma_km"
- type="number"
- placeholder="Takıldığı KM">
+<input name="takilma_km" type="number" min="0" placeholder="Takıldığı KM">
 
-<input
- name="maliyet"
- type="number"
- step="0.01"
- placeholder="Maliyet ₺">
+<input name="maliyet" type="number" min="0" step="0.01" placeholder="Maliyet (₺)">
 
-<textarea
- name="aciklama"
- placeholder="Açıklama"></textarea>
+<textarea name="aciklama" placeholder="Açıklama"></textarea>
 
-<button class="primary" type="submit">
- Lastiği Kaydet
-</button>
+<button class="primary" type="submit">Lastiği Kaydet</button>
 
 </form>
 
@@ -427,54 +257,31 @@ button{
 
 <form id="partForm">
 
-<select
- name="arac_id"
- class="vehicleSelect"
- required>
-</select>
+<select name="arac_id" class="vehicleSelect" required></select>
 
 <input name="tarih" type="date" required>
 
-<input
- name="parca_adi"
- required
- placeholder="Değişen parça">
+<input name="parca_adi" required placeholder="Parça adı">
 
-<input name="marka" placeholder="Parça markası">
+<input name="marka" placeholder="Marka">
 
 <input name="parca_no" placeholder="Parça numarası">
 
-<input
- name="adet"
- type="number"
- min="1"
- value="1"
- placeholder="Adet">
+<div class="grid">
 
-<input
- name="km_saat"
- type="number"
- placeholder="KM / çalışma saati">
+<input name="adet" type="number" min="1" value="1" placeholder="Adet">
 
-<input
- name="birim_fiyat"
- type="number"
- step="0.01"
- placeholder="Birim fiyat ₺">
+<input name="km_saat" type="number" min="0" placeholder="KM / çalışma saati">
 
-<input
- name="toplam_fiyat"
- type="number"
- step="0.01"
- placeholder="Toplam fiyat ₺">
+</div>
 
-<textarea
- name="aciklama"
- placeholder="Açıklama"></textarea>
+<input name="birim_fiyat" type="number" min="0" step="0.01" placeholder="Birim fiyat (₺)">
 
-<button class="primary" type="submit">
- Parçayı Kaydet
-</button>
+<input name="toplam_fiyat" type="number" min="0" step="0.01" placeholder="Toplam fiyat (₺)">
+
+<textarea name="aciklama" placeholder="Açıklama"></textarea>
+
+<button class="primary" type="submit">Parçayı Kaydet</button>
 
 </form>
 
@@ -491,628 +298,653 @@ button{
 
 <script>
 
-const SUPABASE_URL =
-"https://qccpcepsgfepuyltamae.supabase.co";
+(function(){
 
-const SUPABASE_KEY =
-"sb_publishable_mKOALiZdR_RpkMt028nbIA_vOv0epVz";
+const SUPABASE_URL='https://qccpcepsgfepuyltamae.supabase.co';
 
-const db =
-supabase.createClient(
- SUPABASE_URL,
- SUPABASE_KEY
-);
+const SUPABASE_KEY='sb_publishable_mKOALiZdR_RpkMt028nbIA_vOv0epVz';
 
-let vehicles=[];
-let maintenance=[];
-let tires=[];
-let parts=[];
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const el=id=>document.getElementById(id);
+let vehicles=[],maintenance=[],tires=[],parts=[];
 
-function today(){
- return new Date().toISOString().slice(0,10);
-}
+const $=id=>document.getElementById(id);
 
-document
-.querySelectorAll('input[type="date"]')
-.forEach(x=>x.value=today());
+const today=()=>new Date().toISOString().slice(0,10);
+
+document.querySelectorAll('input[type="date"]').forEach(x=>x.value=today());
 
 
 function message(id,text){
 
- const box=el(id);
+const box=$(id);
 
- box.textContent=text;
+box.textContent=text;
 
- box.classList.remove("hidden");
+box.classList.remove('hidden');
 
 }
 
 
-function hideMessage(id){
+function clearMessage(id){
 
- el(id).classList.add("hidden");
+$(id).classList.add('hidden');
 
 }
 
 
 function safe(value){
 
- return String(value ?? "")
- .replace(
-  /[&<>"']/g,
-  char=>({
-   "&":"&amp;",
-   "<":"&lt;",
-   ">":"&gt;",
-   '"':"&quot;",
-   "'":"&#39;"
-  }[char])
- );
+return String(value==null?'':value).replace(/[&<>"']/g,c=>({
+
+'&':'&amp;',
+
+'<':'&lt;',
+
+'>':'&gt;',
+
+'"':'&quot;',
+
+"'":'&#39;'
+
+}[c]));
 
 }
 
 
-function getFormData(form){
+function formDataObj(form){
 
- const data =
- Object.fromEntries(
-  new FormData(form).entries()
- );
+const obj=Object.fromEntries(new FormData(form).entries());
 
- Object.keys(data).forEach(key=>{
+Object.keys(obj).forEach(k=>{
 
-  if(data[key]==="")
-   data[key]=null;
+if(obj[k]==='')obj[k]=null;
 
- });
+});
 
- return data;
+return obj;
 
 }
 
 
-async function checkLogin(){
+async function authState(){
 
- const {
-  data:{session}
- }=await db.auth.getSession();
+const {data:{session}}=await db.auth.getSession();
 
+if(!session){
 
- if(!session){
+$('authView').classList.remove('hidden');
 
-  el("authView").classList.remove("hidden");
+$('appView').classList.add('hidden');
 
-  el("appView").classList.add("hidden");
+$('logout').classList.add('hidden');
 
-  el("logout").classList.add("hidden");
-
-  return;
-
- }
-
-
- const {
-  data:member,
-  error
- }=await db
- .from("company_members")
- .select("role,email")
- .eq("user_id",session.user.id)
- .maybeSingle();
-
-
- if(error || !member){
-
-  await db.auth.signOut();
-
-  message(
-   "authMsg",
-   "Bu e-posta Marhan Filo için yetkilendirilmemiş."
-  );
-
-  return;
-
- }
-
-
- el("authView").classList.add("hidden");
-
- el("appView").classList.remove("hidden");
-
- el("logout").classList.remove("hidden");
-
-
- el("welcome").textContent =
- session.user.email +
- " • " +
- (member.role==="admin"
- ? "Yönetici"
- : "Kullanıcı");
-
-
- await loadData();
+return;
 
 }
 
 
+const {data:member,error}=await db
 
-el("authForm")
-.addEventListener(
-"submit",
-async event=>{
+.from('company_members')
 
- event.preventDefault();
+.select('role,email')
 
- hideMessage("authMsg");
+.eq('user_id',session.user.id)
 
- const email =
- el("email").value.trim();
+.maybeSingle();
 
- const password =
- el("password").value;
 
+if(error || !member){
 
- const {error} =
- await db.auth.signInWithPassword({
-  email,
-  password
- });
+await db.auth.signOut();
 
+$('authView').classList.remove('hidden');
 
- if(error){
+$('appView').classList.add('hidden');
 
-  message(
-   "authMsg",
-   "Giriş yapılamadı: " +
-   error.message
-  );
+$('logout').classList.add('hidden');
 
-  return;
+message(
+'authMsg',
+'Bu e-posta Marhan Filo için yetkilendirilmemiş.'
+);
 
- }
-
-
- await checkLogin();
-
-});
-
-
-
-el("signupBtn")
-.addEventListener(
-"click",
-async()=>{
-
- const email =
- el("email").value.trim();
-
- const password =
- el("password").value;
-
-
- if(!email || password.length<8){
-
-  message(
-   "authMsg",
-   "E-posta adresini gir ve en az 8 karakterli bir şifre oluştur."
-  );
-
-  return;
-
- }
-
-
- const {data,error} =
- await db.auth.signUp({
-  email,
-  password
- });
-
-
- if(error){
-
-  message(
-   "authMsg",
-   "Hesap oluşturulamadı: " +
-   error.message
-  );
-
-  return;
-
- }
-
-
- if(data.session){
-
-  await checkLogin();
-
- }
- else{
-
-  message(
-   "authMsg",
-   "Hesap oluşturuldu. E-posta doğrulama mesajı geldiyse bağlantıya bas, ardından giriş yap."
-  );
-
- }
-
-});
-
-
-
-el("logout")
-.addEventListener(
-"click",
-async()=>{
-
- await db.auth.signOut();
-
- location.reload();
-
-});
-
-
-
-document
-.querySelectorAll("#tabs button")
-.forEach(button=>{
-
- button.addEventListener(
- "click",
- ()=>{
-
-  document
-  .querySelectorAll("#tabs button")
-  .forEach(
-   b=>b.classList.toggle(
-    "active",
-    b===button
-   )
-  );
-
-
-  document
-  .querySelectorAll(".panel")
-  .forEach(
-   panel=>panel.classList.add("hidden")
-  );
-
-
-  el(
-   button.dataset.tab+"Panel"
-  ).classList.remove("hidden");
-
- });
-
-});
-
-
-
-async function loadData(){
-
- const results =
- await Promise.all([
-
-  db
-  .from("araclar")
-  .select("*")
-  .order("plaka"),
-
-  db
-  .from("bakimlar")
-  .select("*")
-  .order("tarih",{ascending:false}),
-
-  db
-  .from("lastikler")
-  .select("*")
-  .order("tarih",{ascending:false}),
-
-  db
-  .from("parcalar")
-  .select("*")
-  .order("tarih",{ascending:false})
-
- ]);
-
-
- const failed =
- results.find(x=>x.error);
-
-
- if(failed){
-
-  message(
-   "appMsg",
-   "Veriler yüklenemedi: " +
-   failed.error.message
-  );
-
-  return;
-
- }
-
-
- vehicles=results[0].data || [];
- maintenance=results[1].data || [];
- tires=results[2].data || [];
- parts=results[3].data || [];
-
-
- render();
+return;
 
 }
 
+
+$('authView').classList.add('hidden');
+
+$('appView').classList.remove('hidden');
+
+$('logout').classList.remove('hidden');
+
+$('welcome').textContent=
+session.user.email+
+' • '+
+(member.role==='admin'?'Yönetici':'Kullanıcı');
+
+clearMessage('authMsg');
+
+await loadAll();
+
+}
+
+
+$('authForm').addEventListener('submit',async e=>{
+
+e.preventDefault();
+
+clearMessage('authMsg');
+
+$('loginBtn').disabled=true;
+
+const email=$('email').value.trim();
+
+const password=$('password').value;
+
+const {error}=await db.auth.signInWithPassword({
+email,
+password
+});
+
+$('loginBtn').disabled=false;
+
+if(error){
+
+message(
+'authMsg',
+'Giriş yapılamadı: '+error.message
+);
+
+return;
+
+}
+
+await authState();
+
+});
+
+
+$('signupBtn').addEventListener('click',async()=>{
+
+clearMessage('authMsg');
+
+const email=$('email').value.trim();
+
+const password=$('password').value;
+
+if(!email || password.length<8){
+
+message(
+'authMsg',
+'E-posta gir ve en az 8 karakterli bir şifre belirle.'
+);
+
+return;
+
+}
+
+$('signupBtn').disabled=true;
+
+const {data,error}=await db.auth.signUp({
+email,
+password
+});
+
+$('signupBtn').disabled=false;
+
+if(error){
+
+message(
+'authMsg',
+'Hesap oluşturulamadı: '+error.message
+);
+
+return;
+
+}
+
+if(data.session){
+
+await authState();
+
+}else{
+
+message(
+'authMsg',
+'Hesap oluşturuldu. E-posta doğrulama mesajı geldiyse bağlantıya bas, ardından giriş yap.'
+);
+
+}
+
+});
+
+
+$('logout').addEventListener('click',async()=>{
+
+await db.auth.signOut();
+
+location.reload();
+
+});
+
+
+db.auth.onAuthStateChange(
+()=>setTimeout(authState,0)
+);
+
+
+document.querySelectorAll('#tabs button').forEach(btn=>{
+
+btn.addEventListener('click',()=>{
+
+document.querySelectorAll('#tabs button').forEach(
+b=>b.classList.toggle('active',b===btn)
+);
+
+document.querySelectorAll('.panel').forEach(
+p=>p.classList.add('hidden')
+);
+
+$(btn.dataset.tab+'Panel').classList.remove('hidden');
+
+});
+
+});
+
+
+async function loadAll(){
+
+clearMessage('appMsg');
+
+const results=await Promise.all([
+
+db.from('araclar')
+.select('*')
+.order('plaka'),
+
+db.from('bakimlar')
+.select('*')
+.order('tarih',{ascending:false}),
+
+db.from('lastikler')
+.select('*')
+.order('tarih',{ascending:false}),
+
+db.from('parcalar')
+.select('*')
+.order('tarih',{ascending:false})
+
+]);
+
+
+const failed=results.find(r=>r.error);
+
+if(failed){
+
+message(
+'appMsg',
+'Veriler yüklenemedi: '+failed.error.message
+);
+
+return;
+
+}
+
+
+vehicles=results[0].data||[];
+
+maintenance=results[1].data||[];
+
+tires=results[2].data||[];
+
+parts=results[3].data||[];
+
+render();
+
+}
 
 
 function vehicleName(id){
 
- const vehicle =
- vehicles.find(
-  v=>String(v.id)===String(id)
- );
+const v=vehicles.find(
+x=>String(x.id)===String(id)
+);
 
- return vehicle
- ? vehicle.plaka
- : "Araç #"+id;
+return v?v.plaka:'Araç #'+id;
 
 }
-
 
 
 function render(){
 
- el("truckCount").textContent =
- vehicles.filter(
-  v=>v.arac_turu==="Kamyon"
- ).length;
+$('truckCount').textContent=
+vehicles.filter(v=>v.arac_turu==='Kamyon').length;
+
+$('excavatorCount').textContent=
+vehicles.filter(v=>v.arac_turu==='Ekskavatör').length;
+
+$('otherCount').textContent=
+vehicles.filter(
+v=>!['Kamyon','Ekskavatör'].includes(v.arac_turu)
+).length;
+
+$('maintenanceCount').textContent=
+maintenance.length;
 
 
- el("excavatorCount").textContent =
- vehicles.filter(
-  v=>v.arac_turu==="Ekskavatör"
- ).length;
+document.querySelectorAll('.vehicleSelect').forEach(sel=>{
+
+sel.innerHTML=
+'<option value="">Araç seç</option>'+
+
+vehicles.map(v=>
+
+'<option value="'+v.id+'">'+
+safe(v.plaka)+
+' — '+
+safe(v.arac_turu)+
+'</option>'
+
+).join('');
+
+});
 
 
- el("otherCount").textContent =
- vehicles.filter(
-  v=>![
-   "Kamyon",
-   "Ekskavatör"
-  ].includes(v.arac_turu)
- ).length;
+$('vehiclesList').innerHTML=
+
+'<h2 style="margin-top:22px">Kayıtlı Araçlar ('+
+vehicles.length+
+')</h2>'+
+
+(
+vehicles.length
+
+?vehicles.map(v=>
+
+'<div class="record">'+
+
+'<div class="row">'+
+
+'<strong>'+
+safe(v.plaka)+
+'</strong>'+
+
+'<span class="pill">'+
+safe(v.arac_turu)+
+'</span>'+
+
+'</div>'+
+
+'<div class="muted">'+
+
+safe(
+[v.marka,v.model]
+.filter(Boolean)
+.join(' ')
+)+
+
+' • '+
+
+safe(v.guncel_deger||0)+
+
+' '+
+
+(v.takip_birimi==='saat'?'saat':'km')+
+
+'</div>'+
+
+(v.notlar
+?'<div class="muted">'+safe(v.notlar)+'</div>'
+:'')+
+
+'</div>'
+
+).join('')
+
+:'<div class="notice">Henüz araç kaydı yok.</div>'
+
+);
 
 
- el("maintenanceCount").textContent =
- maintenance.length;
+$('maintenanceList').innerHTML=
+
+'<h2 style="margin-top:22px">Bakım Geçmişi</h2>'+
+
+(
+maintenance.length
+
+?maintenance.map(m=>
+
+'<div class="record">'+
+
+'<strong>'+
+safe(vehicleName(m.arac_id))+
+' • '+
+safe(m.bakim_turu)+
+'</strong>'+
+
+'<div class="muted">'+
+safe(m.tarih)+
+' • '+
+safe(m.km_saat||'-')+
+' KM/Saat</div>'+
+
+'<div class="muted">'+
+safe(m.yapilan_islem||'')+
+'</div>'+
+
+'</div>'
+
+).join('')
+
+:'<div class="notice">Henüz bakım kaydı yok.</div>'
+
+);
 
 
+$('tiresList').innerHTML=
 
- document
- .querySelectorAll(".vehicleSelect")
- .forEach(select=>{
+'<h2 style="margin-top:22px">Lastik Geçmişi</h2>'+
 
-  select.innerHTML =
-  '<option value="">Araç seç</option>' +
+(
+tires.length
 
-  vehicles.map(
-   v=>
-   '<option value="'+v.id+'">'+
-   safe(v.plaka)+
-   " — "+
-   safe(v.arac_turu)+
-   "</option>"
-  ).join("");
+?tires.map(t=>
 
- });
+'<div class="record">'+
 
+'<strong>'+
+safe(vehicleName(t.arac_id))+
+' • '+
+safe(t.konum)+
+'</strong>'+
 
+'<div class="muted">'+
+safe(t.marka||'')+
+' '+
+safe(t.model||'')+
+' • '+
+safe(t.ebat||'')+
+'</div>'+
 
- el("vehiclesList").innerHTML =
+'<div class="muted">'+
+safe(t.tarih)+
+' • '+
+safe(t.durum||'')+
+'</div>'+
 
- '<h2 style="margin-top:22px">Kayıtlı Araçlar</h2>' +
+'</div>'
 
- (
- vehicles.length
- ?
- vehicles.map(v=>
+).join('')
 
- '<div class="record">'+
- '<strong>'+safe(v.plaka)+'</strong>'+
- '<div class="muted">'+
- safe(v.arac_turu)+
- ' • '+
- safe(v.marka || "")+
- ' '+
- safe(v.model || "")+
- '</div>'+
- '<div class="muted">'+
- safe(v.guncel_deger || 0)+
- ' '+
- (v.takip_birimi==="saat"
- ? "çalışma saati"
- : "km")+
- '</div>'+
- '</div>'
+:'<div class="notice">Henüz lastik kaydı yok.</div>'
 
- ).join("")
-
- :
-
- '<div class="notice">'+
- 'Henüz araç kaydı yok.'+
- '</div>'
-
- );
+);
 
 
+$('partsList').innerHTML=
 
- el("maintenanceList").innerHTML =
+'<h2 style="margin-top:22px">Parça Geçmişi</h2>'+
 
- '<h2 style="margin-top:22px">Bakım Geçmişi</h2>' +
+(
+parts.length
 
- (
- maintenance.length
- ?
- maintenance.map(m=>
+?parts.map(p=>
 
- '<div class="record">'+
- '<strong>'+
- safe(vehicleName(m.arac_id))+
- ' • '+
- safe(m.bakim_turu)+
- '</strong>'+
- '<div class="muted">'+
- safe(m.tarih)+
- ' • '+
- safe(m.km_saat || "-")+
- ' KM/Saat'+
- '</div>'+
- '<div class="muted">'+
- safe(m.yapilan_islem || "")+
- '</div>'+
- '</div>'
+'<div class="record">'+
 
- ).join("")
+'<strong>'+
+safe(vehicleName(p.arac_id))+
+' • '+
+safe(p.parca_adi)+
+'</strong>'+
 
- :
+'<div class="muted">'+
+safe(p.tarih)+
+' • Adet: '+
+safe(p.adet||1)+
+'</div>'+
 
- '<div class="notice">'+
- 'Henüz bakım kaydı yok.'+
- '</div>'
+'</div>'
 
- );
+).join('')
 
+:'<div class="notice">Henüz parça kaydı yok.</div>'
 
-
- el("tiresList").innerHTML =
-
- '<h2 style="margin-top:22px">Lastik Geçmişi</h2>' +
-
- (
- tires.length
- ?
- tires.map(t=>
-
- '<div class="record">'+
- '<strong>'+
- safe(vehicleName(t.arac_id))+
- ' • '+
- safe(t.konum)+
- '</strong>'+
- '<div class="muted">'+
- safe(t.marka || "")+
- ' '+
- safe(t.model || "")+
- ' • '+
- safe(t.ebat || "")+
- '</div>'+
- '<div class="muted">'+
- safe(t.tarih)+
- ' • '+
- safe(t.durum || "")+
- '</div>'+
- '</div>'
-
- ).join("")
-
- :
-
- '<div class="notice">'+
- 'Henüz lastik kaydı yok.'+
- '</div>'
-
- );
-
-
-
- el("partsList").innerHTML =
-
- '<h2 style="margin-top:22px">Parça Geçmişi</h2>' +
-
- (
- parts.length
- ?
- parts.map(p=>
-
- '<div class="record">'+
- '<strong>'+
- safe(vehicleName(p.arac_id))+
- ' • '+
- safe(p.parca_adi)+
- '</strong>'+
- '<div class="muted">'+
- safe(p.tarih)+
- ' • Adet: '+
- safe(p.adet || 1)+
- '</div>'+
- '</div>'
-
- ).join("")
-
- :
-
- '<div class="notice">'+
- 'Henüz parça kaydı yok.'+
- '</div>'
-
- );
+);
 
 }
 
 
+async function saveForm(form,table){
 
-async function saveForm(
- form,
- table
-){
+clearMessage('appMsg');
 
- hideMessage("appMsg");
-
- const data =
- getFormData(form);
+const data=formDataObj(form);
 
 
- [
- "model_yili",
- "guncel_deger",
- "km_saat",
- "sonraki_bakim",
- "km",
- "takilma_km",
- "adet"
- ]
- .forEach(key=>{
+[
+'model_yili',
+'guncel_deger',
+'km_saat',
+'sonraki_bakim',
+'km',
+'takilma_km',
+'adet'
+].forEach(k=>{
 
-  if(data[key]!=null)
-   data[key]=Number(data[key]);
+if(data[k]!=null)data[k]=Number(data[k]);
 
- });
+});
 
 
- [
- "maliyet",
- "birim_fiyat",
- "toplam_fiyat"
- ]
- .forEach(key=>{
+[
+'maliyet',
+'birim_fiyat',
+'toplam_fiyat'
+].forEach(k=>{
 
-  if(data[key]!=null)
-   data[key]=Number(data[key]);
+if(data[k]!=null)data[k]=Number(data[k]);
 
- });
+});
 
 
- const {error} =
- await db
- .from(table)
- .insert(data);
+const {error}=await db
+.from(table)
+.insert(data);
 
 
- if(error){
+if(error){
 
-  message(
-   "appMsg",
-   "K
+message(
+'appMsg',
+'Kayıt yapılamadı: '+error.message
+);
+
+return;
+
+}
+
+
+form.reset();
+
+form.querySelectorAll('input[type="date"]').forEach(
+x=>x.value=today()
+);
+
+
+const adet=form.querySelector('[name="adet"]');
+
+if(adet)adet.value='1';
+
+
+message(
+'appMsg',
+'Kayıt merkezi veritabanına kaydedildi.'
+);
+
+await loadAll();
+
+}
+
+
+$('vehicleForm').addEventListener('submit',e=>{
+
+e.preventDefault();
+
+saveForm(
+e.currentTarget,
+'araclar'
+);
+
+});
+
+
+$('maintenanceForm').addEventListener('submit',e=>{
+
+e.preventDefault();
+
+saveForm(
+e.currentTarget,
+'bakimlar'
+);
+
+});
+
+
+$('tireForm').addEventListener('submit',e=>{
+
+e.preventDefault();
+
+saveForm(
+e.currentTarget,
+'lastikler'
+);
+
+});
+
+
+$('partForm').addEventListener('submit',e=>{
+
+e.preventDefault();
+
+saveForm(
+e.currentTarget,
+'parcalar'
+);
+
+});
+
+
+authState();
+
+})();
+
+</script>
+
+</body>
+</html>
