@@ -10,6 +10,6 @@ function prepareCamera(){const cam=document.querySelector('#mhCam');if(!cam)retu
 document.addEventListener('click',function(e){const b=e.target.closest?.('#mhScan');if(!b)return;e.preventDefault();e.stopImmediatePropagation();const cam=prepareCamera();if(!cam){status('Kamera alanı bulunamadı. Sayfayı yenileyip tekrar dene.');return}try{cam.click()}catch(err){status('Kamera açılamadı. Tarayıcı kamera/fotoğraf iznini kontrol et.')}},true);
 document.addEventListener('change',function(e){if(e.target?.id!=='mhCam')return;e.stopImmediatePropagation();const f=e.target.files?.[0];if(f)scan(f)},true);
 new MutationObserver(prepareCamera).observe(document.documentElement,{childList:true,subtree:true});prepareCamera();
-/* Yakıt ekranında manuel plaka desteğini de yükle. */
 if(!document.querySelector('script[data-marhan-fuel-manual]')){const s=document.createElement('script');s.src='fuel-manual-v1.js?v=20261022-1625';s.dataset.marhanFuelManual='1';document.body.appendChild(s)}
+if(!document.querySelector('script[data-marhan-quick-repair]')){const s=document.createElement('script');s.src='quick-repair-v1.js?v=20261022-1945';s.dataset.marhanQuickRepair='1';document.body.appendChild(s)}
 })();
