@@ -15,4 +15,5 @@
   db.auth.onAuthStateChange((event)=>{if(event==='PASSWORD_RECOVERY'){document.getElementById('appView')?.classList.add('hidden');document.getElementById('authView')?.classList.remove('hidden');addPanel(document.getElementById('authView'),true)}});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',settings,{once:true});else settings();
   const obs=new MutationObserver(settings);obs.observe(document.documentElement,{childList:true,subtree:true});
+  if(!document.querySelector('script[data-marhan-repair-v2]')){const s=document.createElement('script');s.src='repair-v2.js?v=1';s.dataset.marhanRepairV2='1';document.body.appendChild(s)}
 })();
