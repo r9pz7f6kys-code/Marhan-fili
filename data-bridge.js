@@ -1,22 +1,17 @@
-/* Bridge Supabase data into the site-first dashboard. */
-var sites = [];
-var trips = [];
-async function refreshMarhanDashboardData(){
-  try {
-    const [s,tr] = await Promise.all([
-      db.from('santiyeler').select('*').order('id',{ascending:false}),
-      db.from('seferler').select('*').order('id',{ascending:false})
-    ]);
-    if(!s.error) sites = s.data || [];
-    if(!tr.error) trips = tr.data || [];
-  } catch(e){ console.error('Dashboard data sync failed',e); }
-}
-refreshMarhanDashboardData();
-setTimeout(refreshMarhanDashboardData,700);
-const originalSaveSite = window.saveSite;
-if(typeof originalSaveSite === 'function'){
-  window.saveSite = async function(){
-    await originalSaveSite.apply(this,arguments);
-    await refreshMarhanDashboardData();
+/* Marhan Filo data bridge v2.
+   Eski sites/trips kopyalari kaldirildi. Sefer/yakit/tamir ekranlarinin tek veri
+   kaynagi ilgili ekranin Supabase sorgusudur. Bu dosya artik ikinci bir cache
+   olusturmaz ve eski kayitlarin yeni ekranlara karismasini engeller. */
+(function(){
+  window.refreshMarhanDashboardData = async function(){
+    try{
+      if(typeof window.MarhanDataRefresh === 'function'){
+        return await window.MarhanDataRefresh();
+      }
+      return true;
+    }catch(e){
+      console.error('Marhan merkezi veri yenileme hatasi',e);
+      return false;
+    }
   };
-}
+})();
