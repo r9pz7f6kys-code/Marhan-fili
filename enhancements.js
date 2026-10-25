@@ -1,7 +1,7 @@
-/* Marhan compatibility + safety layer. v4 - single current dashboard */
+/* Marhan compatibility + safety layer. v5 - restore visible modules */
 (function(){
 window.MARHAN_LEGACY_ENHANCEMENTS_DISABLED=true;
-window.MARHAN_REQUIRED_HOME_BUILD='20261024-2';
+window.MARHAN_REQUIRED_HOME_BUILD='20261025-1';
 function ensureMounts(){const home=document.querySelector('#homePage');if(home&&!document.querySelector('#homeSplit')){const m=document.createElement('div');m.id='homeSplit';home.prepend(m)}const app=document.querySelector('#appView');if(app&&!document.querySelector('#operationsPage')){const p=document.createElement('section');p.id='operationsPage';p.className='page hidden';app.appendChild(p)}}
 async function lockButton(btn,work){if(btn&&btn.disabled)return;if(btn){btn.disabled=true;btn.dataset.oldText=btn.textContent;btn.textContent='Kaydediliyor...'}try{return await work()}finally{if(btn){btn.disabled=false;btn.textContent=btn.dataset.oldText||'Kaydet'}}}
 window.saveStock=async function(){const q=num('sQty'),critical=num('sCritical'),price=num('sPrice');if(!val('sName'))return note('sMsg','Ürün adı gerekli.',false);if(!val('sCat'))return note('sMsg','Kategori gerekli.',false);if(q!=null&&q<0)return note('sMsg','Stok miktarı negatif olamaz.',false);if(critical!=null&&critical<0)return note('sMsg','Kritik stok negatif olamaz.',false);if(price!=null&&price<0)return note('sMsg','Birim fiyat negatif olamaz.',false);await insert('stok_urunleri',{kategori:val('sCat'),urun_adi:val('sName'),marka:val('sBrand')||null,model_ebat:val('sModel')||null,birim:val('sUnit')||'adet',stok:q??0,kritik_stok:critical??0,birim_fiyat:price??0,tedarikci:val('sSupplier')||null,notlar:val('sNote')||null},'sMsg')};
@@ -10,16 +10,20 @@ window.saveTire=async function(){const btn=document.querySelector('#tiresPage bu
 window.saveExpense=async function(){const amount=num('eAmount');if(amount==null||amount<=0)return note('eMsg','Tutar sıfırdan büyük olmalı.',false);await insert('gelir_giderler',{tarih:val('eDate')||null,tip:'gider',kategori:val('eCat')||'Genel',arac_id:val('eVehicle')?Number(val('eVehicle')):null,tutar:amount,aciklama:val('eNote')||null},'eMsg')};
 function neutralizeLegacyCamera(){const cam=document.querySelector('#mhCam');if(!cam||cam.dataset.ocrReady)return;cam.dataset.ocrReady='1';cam.onchange=null}
 function loadScript(src,key){if(document.querySelector('script[data-'+key+']'))return;const s=document.createElement('script');s.src=src;s.dataset[key]='1';document.body.appendChild(s)}
-function forceCurrentHome(){
-  /* index.html still references an old query version. Load the current build once with a unique URL.
-     home-v2 guards below prevent old cached screens from being the final active dashboard. */
-  if(window.__MARHAN_CURRENT_HOME_REQUESTED)return;
-  window.__MARHAN_CURRENT_HOME_REQUESTED=true;
-  loadScript('home-v2.js?v='+window.MARHAN_REQUIRED_HOME_BUILD,'marhanCurrentHome');
+function restoreHomeImages(){
+ const cards=[['#mhS','https://www.huber-bau.ch/fileadmin/user_upload/2_Angebot/2_Aushub_und_Erdbau/Galerie_2026/5_Galerie-Spezialtiefbau-Gebr.-Huber-AG.jpg'],['#mhF','https://cdn.xargocdn.com/bonneyenergy/49608a2f-9eeb-4931-a87c-e96523b8cf29/DSC07879.crop_3631x2449_21%2C0.preview_800.webp'],['#mhR','https://corediesel.com.au/wp-content/uploads/2021/07/truck-services01.jpg']];
+ cards.forEach(([sel,src])=>{const b=document.querySelector(sel);if(!b||b.querySelector('img'))return;const img=document.createElement('img');img.src=src;img.alt='';img.loading='eager';img.onerror=()=>{img.style.display='none'};b.prepend(img);if(!b.querySelector('.mhShade')){const sh=document.createElement('i');sh.className='mhShade';b.insertBefore(sh,img.nextSibling)}})
 }
-ensureMounts();loadScript('auth-fix.js?v=2','marhanAuthFix');loadScript('vehicle-detail-v1.js?v=3','marhanVehicleDetail');loadScript('plate-scan-v1.js?v=6','marhanPlateScan');loadScript('system-health-v1.js?v=20261024-1','marhanHealth');
-/* Run after parser-loaded legacy home-v2.js so the current build owns the final handlers/UI. */
+function forceCurrentHome(){if(window.__MARHAN_CURRENT_HOME_REQUESTED)return;window.__MARHAN_CURRENT_HOME_REQUESTED=true;loadScript('home-v2.js?v='+window.MARHAN_REQUIRED_HOME_BUILD,'marhanCurrentHome')}
+ensureMounts();
+loadScript('auth-fix.js?v=2','marhanAuthFix');
+loadScript('vehicle-detail-v1.js?v=3','marhanVehicleDetail');
+loadScript('plate-scan-v1.js?v=6','marhanPlateScan');
+loadScript('system-health-v1.js?v=20261024-1','marhanHealth');
+loadScript('excel-export-v1.js?v=20261025-1','marhanExcelExport');
+loadScript('fuel-manual-v1.js?v=20261025-1','marhanFuelManual');
 setTimeout(forceCurrentHome,80);
 setTimeout(()=>loadScript('reports-v5.js?v=20261022-1342','marhanReportsLatest'),1200);
-new MutationObserver(()=>{ensureMounts();neutralizeLegacyCamera()}).observe(document.documentElement,{childList:true,subtree:true});
+setTimeout(restoreHomeImages,250);
+new MutationObserver(()=>{ensureMounts();neutralizeLegacyCamera();restoreHomeImages()}).observe(document.documentElement,{childList:true,subtree:true});
 })();
